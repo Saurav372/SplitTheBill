@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SplitTheBill Dashboard - Manage your groups, expenses, and settlements.">
+    <title>Dashboard - SplitTheBill</title>
+    
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#3B82F6">
+    <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/css/components.css">
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    
+    <!-- jsPDF for PDF export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body class="dashboard-body">
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p class="loading-text">Loading your dashboard...</p>
+        </div>
+    </div>
+    
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="header-container">
+            <div class="header-left">
+                <button id="menu-toggle" class="menu-toggle" aria-label="Toggle menu">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                </button>
+                <div class="header-logo">
+                    <img src="/assets/images/logo.svg" alt="SplitTheBill" class="logo-img">
+                    <span class="logo-text">SplitTheBill</span>
+                </div>
+            </div>
+            
+            <div class="header-right">
+                <div class="header-actions">
+                    <button id="theme-toggle" class="action-btn" aria-label="Toggle dark mode">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                    <button id="notifications-btn" class="action-btn" aria-label="Notifications">
+                        <span class="notification-icon">🔔</span>
+                        <span id="notification-badge" class="notification-badge" style="display: none;">0</span>
+                    </button>
+                </div>
+                
+                <div class="user-menu">
+                    <button id="user-menu-toggle" class="user-menu-toggle">
+                        <div class="user-avatar">
+                            <img id="user-avatar-img" src="/assets/default-avatar.svg" alt="User Avatar" class="avatar-img">
+                        </div>
+                        <div class="user-info">
+                            <span id="user-name" class="user-name">Guest User</span>
+                            <span id="user-mode" class="user-mode">Guest Mode</span>
+                        </div>
+                        <span class="dropdown-arrow">▼</span>
+                    </button>
+                    
+                    <div id="user-dropdown" class="user-dropdown">
+                        <div class="dropdown-header">
+                            <div class="user-avatar-large">
+                                <img id="dropdown-avatar" src="/assets/default-avatar.svg" alt="User Avatar">
+                            </div>
+                            <div class="user-details">
+                                <span id="dropdown-name" class="dropdown-name">Guest User</span>
+                                <span id="dropdown-email" class="dropdown-email">guest@splitthebill.app</span>
+                            </div>
+                        </div>
+                        <div class="dropdown-menu">
+                            <a href="#" id="profile-link" class="dropdown-item">
+                                <span class="item-icon">👤</span>
+                                <span>Profile Settings</span>
+                            </a>
+                            <a href="#" id="preferences-link" class="dropdown-item">
+                                <span class="item-icon">⚙️</span>
+                                <span>Preferences</span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" id="help-link" class="dropdown-item">
+                                <span class="item-icon">❓</span>
+                                <span>Help & FAQ</span>
+                            </a>
+                            <a href="#" id="logout-btn" class="dropdown-item logout">
+                                <span class="item-icon">🚪</span>
+                                <span>Sign Out</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="dashboard-main">
+        <!-- Sidebar Navigation -->
+        <nav id="sidebar" class="sidebar">
+            <div class="sidebar-content">
+                <ul class="nav-tabs">
+                    <li class="nav-tab active" data-tab="groups">
+                        <span class="tab-icon">👥</span>
+                        <span class="tab-text" data-i18n="nav.groups">Groups</span>
+                        <span class="tab-badge" id="groups-badge">0</span>
+                    </li>
+                    <li class="nav-tab" data-tab="members">
+                        <span class="tab-icon">👤</span>
+                        <span class="tab-text" data-i18n="nav.members">Members</span>
+                        <span class="tab-badge" id="members-badge">0</span>
+                    </li>
+                    <li class="nav-tab" data-tab="expenses">
+                        <span class="tab-icon">💰</span>
+                        <span class="tab-text" data-i18n="nav.expenses">Expenses</span>
+                        <span class="tab-badge" id="expenses-badge">0</span>
+                    </li>
+                    <li class="nav-tab" data-tab="analytics">
+                        <span class="tab-icon">📊</span>
+                        <span class="tab-text" data-i18n="nav.analytics">Analytics</span>
+                    </li>
+                    <li class="nav-tab" data-tab="settings">
+                        <span class="tab-icon">⚙️</span>
+                        <span class="tab-text" data-i18n="nav.settings">Settings</span>
+                    </li>
+                </ul>
+                
+                <div class="sidebar-footer">
+                    <div class="guest-mode-warning" id="guest-warning" style="display: none;">
+                        <div class="warning-content">
+                            <span class="warning-icon">⚠️</span>
+                            <div class="warning-text">
+                                <p class="warning-title">Guest Mode</p>
+                                <p class="warning-description">Data will be lost when you close the browser.</p>
+                            </div>
+                        </div>
+                        <button id="upgrade-account-btn" class="btn btn-primary btn-small">
+                            Create Account
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- Content Area -->
+        <div class="content-area">
+            <!-- Groups Tab -->
+            <div id="groups-tab" class="tab-content active">
+                <div class="tab-header">
+                    <div class="tab-title-section">
+                        <h1 class="tab-title">Groups</h1>
+                        <p class="tab-description">Manage your expense groups and invite members</p>
+                    </div>
+                    <button id="create-group-btn" class="btn btn-primary">
+                        <span class="btn-icon">+</span>
+                        <span>Create Group</span>
+                    </button>
+                </div>
+                
+                <div class="content-body">
+                    <div id="groups-list" class="groups-list">
+                        <!-- Groups will be dynamically loaded here -->
+                    </div>
+                    
+                    <div id="groups-empty" class="empty-state" style="display: none;">
+                        <div class="empty-icon">👥</div>
+                        <h3 class="empty-title">No Groups Yet</h3>
+                        <p class="empty-description">
+                            Create your first group to start splitting expenses with friends, roommates, or travel companions.
+                        </p>
+                        <button class="btn btn-primary" onclick="document.getElementById('create-group-btn').click()">
+                            Create Your First Group
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Members Tab -->
+            <div id="members-tab" class="tab-content">
+                <div class="tab-header">
+                    <div class="tab-title-section">
+                        <h1 class="tab-title">Members</h1>
+                        <p class="tab-description">Manage group members and their contact information</p>
+                    </div>
+                    <button id="add-member-btn" class="btn btn-primary">
+                        <span class="btn-icon">+</span>
+                        <span>Add Member</span>
+                    </button>
+                </div>
+                
+                <div class="content-body">
+                    <div class="group-selector">
+                        <label for="member-group-select" class="selector-label">Select Group:</label>
+                        <select id="member-group-select" class="form-select">
+                            <option value="">All Groups</option>
+                        </select>
+                    </div>
+                    
+                    <div id="members-list" class="members-list">
+                        <!-- Members will be dynamically loaded here -->
+                    </div>
+                    
+                    <div id="members-empty" class="empty-state" style="display: none;">
+                        <div class="empty-icon">👤</div>
+                        <h3 class="empty-title">No Members Yet</h3>
+                        <p class="empty-description">
+                            Add members to your groups to start tracking expenses together.
+                        </p>
+                        <button class="btn btn-primary" onclick="document.getElementById('add-member-btn').click()">
+                            Add Your First Member
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Expenses Tab -->
+            <div id="expenses-tab" class="tab-content">
+                <div class="tab-header">
+                    <div class="tab-title-section">
+                        <h1 class="tab-title">Expenses</h1>
+                        <p class="tab-description">Track and split expenses with flexible calculation methods</p>
+                    </div>
+                    <button id="add-expense-btn" class="btn btn-primary">
+                        <span class="btn-icon">+</span>
+                        <span>Add Expense</span>
+                    </button>
+                </div>
+                
+                <div class="content-body">
+                    <div class="expenses-filters">
+                        <div class="filter-group">
+                            <label for="expense-group-select" class="filter-label">Group:</label>
+                            <select id="expense-group-select" class="form-select">
+                                <option value="">All Groups</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="expense-category-select" class="filter-label">Category:</label>
+                            <select id="expense-category-select" class="form-select">
+                                <option value="">All Categories</option>
+                                <option value="food">Food & Dining</option>
+                                <option value="transport">Transportation</option>
+                                <option value="accommodation">Accommodation</option>
+                                <option value="entertainment">Entertainment</option>
+                                <option value="utilities">Utilities</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <input type="text" id="expense-search" class="form-input" placeholder="Search expenses...">
+                        </div>
+                    </div>
+                    
+                    <div id="expenses-list" class="expenses-list">
+                        <!-- Expenses will be dynamically loaded here -->
+                    </div>
+                    
+                    <div id="expenses-empty" class="empty-state" style="display: none;">
+                        <div class="empty-icon">💰</div>
+                        <h3 class="empty-title">No Expenses Yet</h3>
+                        <p class="empty-description">
+                            Start tracking your group expenses by adding your first expense.
+                        </p>
+                        <button class="btn btn-primary" onclick="document.getElementById('add-expense-btn').click()">
+                            Add Your First Expense
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Analytics Tab -->
+            <div id="analytics-tab" class="tab-content">
+                <div class="tab-header">
+                    <div class="tab-title-section">
+                        <h1 class="tab-title">Analytics</h1>
+                        <p class="tab-description">Insights and reports on your spending patterns</p>
+                    </div>
+                    <button id="export-pdf-btn" class="btn btn-secondary">
+                        <span class="btn-icon">📄</span>
+                        <span>Export PDF</span>
+                    </button>
+                </div>
+                
+                <div class="content-body">
+                    <div class="analytics-grid">
+                        <div class="analytics-card">
+                            <h3 class="card-title">Total Expenses</h3>
+                            <div class="card-value" id="total-expenses">$0.00</div>
+                            <div class="card-change positive" id="expenses-change">+0% from last month</div>
+                        </div>
+                        
+                        <div class="analytics-card">
+                            <h3 class="card-title">Active Groups</h3>
+                            <div class="card-value" id="active-groups">0</div>
+                            <div class="card-change" id="groups-change">0 new this month</div>
+                        </div>
+                        
+                        <div class="analytics-card">
+                            <h3 class="card-title">Your Balance</h3>
+                            <div class="card-value" id="user-balance">$0.00</div>
+                            <div class="card-change" id="balance-status">All settled up</div>
+                        </div>
+                        
+                        <div class="analytics-card">
+                            <h3 class="card-title">This Month</h3>
+                            <div class="card-value" id="month-expenses">$0.00</div>
+                            <div class="card-change" id="month-change">0 expenses</div>
+                        </div>
+                    </div>
+                    
+                    <div class="charts-section">
+                        <div class="chart-container">
+                            <h3 class="chart-title">Monthly Spending</h3>
+                            <div id="monthly-chart" class="chart-placeholder">
+                                <p>Chart will be implemented with Chart.js</p>
+                            </div>
+                        </div>
+                        
+                        <div class="chart-container">
+                            <h3 class="chart-title">Expense Categories</h3>
+                            <div id="category-chart" class="chart-placeholder">
+                                <p>Chart will be implemented with Chart.js</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Settings Tab -->
+            <div id="settings-tab" class="tab-content">
+                <div class="tab-header">
+                    <div class="tab-title-section">
+                        <h1 class="tab-title">Settings</h1>
+                        <p class="tab-description">Customize your SplitTheBill experience</p>
+                    </div>
+                </div>
+                
+                <div class="content-body">
+                    <div class="settings-sections">
+                        <div class="settings-section">
+                            <h3 class="section-title">Appearance</h3>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <label class="setting-label">Dark Mode</label>
+                                    <p class="setting-description">Switch between light and dark themes</p>
+                                </div>
+                                <div class="setting-control">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="dark-mode-toggle">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-section">
+                            <h3 class="section-title" data-i18n="settings.localization">Localization</h3>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <label class="setting-label" data-i18n="settings.language">Language</label>
+                                    <p class="setting-description" data-i18n="settings.languageDescription">Choose your preferred language</p>
+                                </div>
+                                <div class="setting-control">
+                                    <select id="language-select" class="form-select">
+                                        <option value="en">English</option>
+                                        <option value="es">Español</option>
+                                        <option value="fr">Français</option>
+                                        <option value="de">Deutsch</option>
+                                        <option value="it">Italiano</option>
+                                        <option value="pt">Português</option>
+                                        <option value="zh">中文</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <label class="setting-label" data-i18n="settings.currency">Default Currency</label>
+                                    <p class="setting-description" data-i18n="settings.currencyDescription">Set your preferred currency for new groups</p>
+                                </div>
+                                <div class="setting-control">
+                                    <select id="currency-select" class="form-select">
+                                        <option value="USD">USD - US Dollar</option>
+                                        <option value="EUR">EUR - Euro</option>
+                                        <option value="GBP">GBP - British Pound</option>
+                                        <option value="JPY">JPY - Japanese Yen</option>
+                                        <option value="CAD">CAD - Canadian Dollar</option>
+                                        <option value="AUD">AUD - Australian Dollar</option>
+                                        <option value="CHF">CHF - Swiss Franc</option>
+                                        <option value="CNY">CNY - Chinese Yuan</option>
+                                        <option value="SEK">SEK - Swedish Krona</option>
+                                        <option value="NZD">NZD - New Zealand Dollar</option>
+                                        <option value="MXN">MXN - Mexican Peso</option>
+                                        <option value="SGD">SGD - Singapore Dollar</option>
+                                        <option value="HKD">HKD - Hong Kong Dollar</option>
+                                        <option value="NOK">NOK - Norwegian Krone</option>
+                                        <option value="TRY">TRY - Turkish Lira</option>
+                                        <option value="RUB">RUB - Russian Ruble</option>
+                                        <option value="INR">INR - Indian Rupee</option>
+                                        <option value="BRL">BRL - Brazilian Real</option>
+                                        <option value="ZAR">ZAR - South African Rand</option>
+                                        <option value="KRW">KRW - South Korean Won</option>
+                                        <option value="PLN">PLN - Polish Zloty</option>
+                                        <option value="CZK">CZK - Czech Koruna</option>
+                                        <option value="HUF">HUF - Hungarian Forint</option>
+                                        <option value="RON">RON - Romanian Leu</option>
+                                        <option value="BGN">BGN - Bulgarian Lev</option>
+                                        <option value="HRK">HRK - Croatian Kuna</option>
+                                        <option value="DKK">DKK - Danish Krone</option>
+                                        <option value="ISK">ISK - Icelandic Krona</option>
+                                        <option value="THB">THB - Thai Baht</option>
+                                        <option value="MYR">MYR - Malaysian Ringgit</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-section">
+                            <h3 class="section-title">Data & Privacy</h3>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <label class="setting-label">Export Data</label>
+                                    <p class="setting-description">Download all your data as JSON</p>
+                                </div>
+                                <div class="setting-control">
+                                    <button id="export-data-btn" class="btn btn-secondary btn-small">
+                                        Export Data
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <label class="setting-label">Clear All Data</label>
+                                    <p class="setting-description">Permanently delete all your data</p>
+                                </div>
+                                <div class="setting-control">
+                                    <button id="clear-data-btn" class="btn btn-danger btn-small">
+                                        Clear Data
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Modals and Overlays -->
+    <div id="modal-overlay" class="modal-overlay" style="display: none;"></div>
+    
+    <!-- Create Group Modal -->
+    <div id="create-group-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create New Group</h2>
+                <button class="close-modal" aria-label="Close modal">&times;</button>
+            </div>
+            <form id="create-group-form" class="modal-body">
+                <div class="form-group">
+                    <label for="group-name" class="form-label">Group Name *</label>
+                    <input type="text" id="group-name" name="group-name" class="form-input" placeholder="Enter group name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="group-description" class="form-label">Description</label>
+                    <textarea id="group-description" name="group-description" class="form-input" placeholder="Optional description" rows="3"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Group Members</label>
+                    <div id="group-members-list" class="members-list">
+                        <div class="member-field">
+                            <input type="email" class="form-input" placeholder="Member email" required>
+                            <input type="text" class="form-input" placeholder="Member name" required>
+                        </div>
+                    </div>
+                    <button type="button" id="add-member-btn" class="btn btn-secondary btn-small">
+                        <i class="icon-plus"></i> Add Member
+                    </button>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary close-modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Group</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Edit Group Modal -->
+    <div id="edit-group-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Group</h2>
+                <button class="close-modal" aria-label="Close modal">&times;</button>
+            </div>
+            <form id="edit-group-form" class="modal-body">
+                <div class="form-group">
+                    <label for="edit-group-name" class="form-label">Group Name *</label>
+                    <input type="text" id="edit-group-name" name="group-name" class="form-input" placeholder="Enter group name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit-group-description" class="form-label">Description</label>
+                    <textarea id="edit-group-description" name="group-description" class="form-input" placeholder="Optional description" rows="3"></textarea>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary close-modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Group</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Add Expense Modal -->
+    <div id="add-expense-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Expense</h2>
+                <button class="close-modal" aria-label="Close modal">&times;</button>
+            </div>
+            <form id="add-expense-form" class="modal-body">
+                <div class="form-group">
+                    <label for="expense-title" class="form-label">Expense Title *</label>
+                    <input type="text" id="expense-title" name="expense-title" class="form-input" placeholder="Enter expense title" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="expense-description" class="form-label">Description</label>
+                    <textarea id="expense-description" name="expense-description" class="form-input" placeholder="Optional description" rows="2"></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="expense-amount" class="form-label">Amount *</label>
+                        <input type="number" id="expense-amount" name="expense-amount" class="form-input" placeholder="0.00" step="0.01" min="0" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="expense-category" class="form-label">Category *</label>
+                        <select id="expense-category" name="expense-category" class="form-select" required>
+                            <option value="">Select category</option>
+                            <option value="food">🍽️ Food & Dining</option>
+                            <option value="transport">🚗 Transportation</option>
+                            <option value="accommodation">🏠 Accommodation</option>
+                            <option value="entertainment">🎬 Entertainment</option>
+                            <option value="shopping">🛍️ Shopping</option>
+                            <option value="utilities">⚡ Utilities</option>
+                            <option value="healthcare">🏥 Healthcare</option>
+                            <option value="other">📝 Other</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="expense-group" class="form-label">Group *</label>
+                    <select id="expense-group" name="expense-group" class="form-select" required>
+                        <option value="">Select a group</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="split-method" class="form-label">Split Method *</label>
+                    <select id="split-method" name="split-method" class="form-select" required>
+                        <option value="equal">Equal Split</option>
+                        <option value="custom">Custom Amounts</option>
+                        <option value="percentage">Percentage Split</option>
+                        <option value="shares">Share-based Split</option>
+                    </select>
+                </div>
+                
+                <div id="split-details" class="split-details"></div>
+                
+                <div class="form-group">
+                    <label class="form-label">Participants</label>
+                    <div id="participants-list" class="participants-list">
+                        <!-- Participants will be populated based on selected group -->
+                    </div>
+                    <div id="split-validation" class="split-validation"></div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary close-modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Expense</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Edit Expense Modal -->
+    <div id="edit-expense-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Expense</h2>
+                <button class="close-modal" aria-label="Close modal">&times;</button>
+            </div>
+            <form id="edit-expense-form" class="modal-body">
+                <div class="form-group">
+                    <label for="edit-expense-title" class="form-label">Expense Title *</label>
+                    <input type="text" id="edit-expense-title" name="expense-title" class="form-input" placeholder="Enter expense title" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit-expense-description" class="form-label">Description</label>
+                    <textarea id="edit-expense-description" name="expense-description" class="form-input" placeholder="Optional description" rows="2"></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-expense-amount" class="form-label">Amount *</label>
+                        <input type="number" id="edit-expense-amount" name="expense-amount" class="form-input" placeholder="0.00" step="0.01" min="0" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-expense-category" class="form-label">Category *</label>
+                        <select id="edit-expense-category" name="expense-category" class="form-select" required>
+                            <option value="">Select category</option>
+                            <option value="food">🍽️ Food & Dining</option>
+                            <option value="transport">🚗 Transportation</option>
+                            <option value="accommodation">🏠 Accommodation</option>
+                            <option value="entertainment">🎬 Entertainment</option>
+                            <option value="shopping">🛍️ Shopping</option>
+                            <option value="utilities">⚡ Utilities</option>
+                            <option value="healthcare">🏥 Healthcare</option>
+                            <option value="other">📝 Other</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit-expense-group" class="form-label">Group *</label>
+                    <select id="edit-expense-group" name="expense-group" class="form-select" required>
+                        <option value="">Select a group</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit-split-method" class="form-label">Split Method *</label>
+                    <select id="edit-split-method" name="split-method" class="form-select" required>
+                        <option value="equal">Equal Split</option>
+                        <option value="custom">Custom Amounts</option>
+                        <option value="percentage">Percentage Split</option>
+                        <option value="shares">Share-based Split</option>
+                    </select>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary close-modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Expense</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- PDF Export Modal -->
+    <div id="pdf-export-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Export PDF Report</h2>
+                <button type="button" class="close-modal" aria-label="Close modal">&times;</button>
+            </div>
+            <form id="pdf-export-form" class="modal-body">
+                <div class="form-group">
+                    <label for="export-group" class="form-label">Select Group *</label>
+                    <select id="export-group" name="export-group" class="form-select" required>
+                        <option value="">Choose a group</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="report-type" class="form-label">Report Type *</label>
+                    <select id="report-type" name="report-type" class="form-select" required>
+                        <option value="summary">Summary Report</option>
+                        <option value="detailed">Detailed Report</option>
+                        <option value="individual">Individual Member Report</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" id="member-selection" style="display: none;">
+                    <label for="export-member" class="form-label">Select Member *</label>
+                    <select id="export-member" name="export-member" class="form-select">
+                        <option value="">Choose a member</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="date-range" class="form-label">Date Range</label>
+                    <select id="date-range" name="date-range" class="form-select">
+                        <option value="all">All Time</option>
+                        <option value="last-month">Last Month</option>
+                        <option value="last-3-months">Last 3 Months</option>
+                        <option value="last-6-months">Last 6 Months</option>
+                        <option value="this-year">This Year</option>
+                        <option value="custom">Custom Range</option>
+                    </select>
+                </div>
+                
+                <div class="form-row" id="custom-date-range" style="display: none;">
+                    <div class="form-group">
+                        <label for="start-date" class="form-label">Start Date</label>
+                        <input type="date" id="start-date" name="start-date" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="end-date" class="form-label">End Date</label>
+                        <input type="date" id="end-date" name="end-date" class="form-input">
+                    </div>
+                </div>
+                
+                <div class="export-options">
+                    <h4 class="options-title">Export Options</h4>
+                    <div class="export-buttons">
+                        <button type="button" id="export-pdf" class="btn btn-primary">
+                            <span class="btn-icon">📄</span>
+                            Export as PDF
+                        </button>
+                        <button type="button" id="export-csv" class="btn btn-secondary">
+                            <span class="btn-icon">📊</span>
+                            Export as CSV
+                        </button>
+                        <button type="button" id="export-json" class="btn btn-secondary">
+                            <span class="btn-icon">💾</span>
+                            Export Data (JSON)
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary close-modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+    
+    <!-- Scripts -->
+    <script src="/js/firebase-config.js"></script>
+    <script src="/js/utils.js"></script>
+    <script src="/js/expense-calculator.js"></script>
+    <script src="/js/pdf-generator.js"></script>
+    <script src="/js/i18n.js"></script>
+    <script src="/js/group-manager.js"></script>
+    <script src="/js/expense-manager.js"></script>
+    <script src="/js/pdf-generator.js"></script>
+    <script src="/js/i18n.js"></script>
+    <script src="/js/dashboard.js"></script>
+    
+    <script>
+        // Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then((registration) => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch((registrationError) => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SplitTheBill FAQ - Frequently Asked Questions and Help Center">
+    <title>FAQ & Help - SplitTheBill</title>
+    
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#3B82F6">
+    <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/faq.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <div class="nav-brand">
+                    <a href="/" class="brand-link">
+                        <img src="/assets/images/logo.svg" alt="SplitTheBill" class="brand-logo">
+                        <span class="brand-text">SplitTheBill</span>
+                    </a>
+                </div>
+                
+                <div class="nav-menu" id="nav-menu">
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="/" class="nav-link">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/dashboard.html" class="nav-link">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/faq.html" class="nav-link active">FAQ</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/auth.html" class="nav-link btn btn-primary">Get Started</a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                </button>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Hero Section -->
+        <section class="faq-hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 class="hero-title">Frequently Asked Questions</h1>
+                    <p class="hero-description">
+                        Find answers to common questions about SplitTheBill. Can't find what you're looking for? Contact our support team.
+                    </p>
+                    
+                    <!-- Search Bar -->
+                    <div class="search-container">
+                        <div class="search-box">
+                            <input type="text" id="faq-search" class="search-input" placeholder="Search for answers..." autocomplete="off">
+                            <button class="search-btn" aria-label="Search">
+                                <span class="search-icon">🔍</span>
+                            </button>
+                        </div>
+                        <div id="search-results" class="search-results" style="display: none;"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- FAQ Categories -->
+        <section class="faq-categories">
+            <div class="container">
+                <div class="categories-grid">
+                    <button class="category-btn active" data-category="all">
+                        <span class="category-icon">📋</span>
+                        <span class="category-text">All Questions</span>
+                    </button>
+                    <button class="category-btn" data-category="getting-started">
+                        <span class="category-icon">🚀</span>
+                        <span class="category-text">Getting Started</span>
+                    </button>
+                    <button class="category-btn" data-category="groups">
+                        <span class="category-icon">👥</span>
+                        <span class="category-text">Groups & Members</span>
+                    </button>
+                    <button class="category-btn" data-category="expenses">
+                        <span class="category-icon">💰</span>
+                        <span class="category-text">Expenses & Splitting</span>
+                    </button>
+                    <button class="category-btn" data-category="account">
+                        <span class="category-icon">👤</span>
+                        <span class="category-text">Account & Data</span>
+                    </button>
+                    <button class="category-btn" data-category="technical">
+                        <span class="category-icon">⚙️</span>
+                        <span class="category-text">Technical Issues</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- FAQ Content -->
+        <section class="faq-content">
+            <div class="container">
+                <div class="faq-list" id="faq-list">
+                    <!-- Getting Started -->
+                    <div class="faq-item" data-category="getting-started">
+                        <button class="faq-question" aria-expanded="false">
+                            <span class="question-text">How do I get started with SplitTheBill?</span>
+                            <span class="question-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="answer-content">
+                                <p>Getting started is easy! You can begin using SplitTheBill in two ways:</p>
+                                <ol>
+                                    <li><strong>Guest Mode:</strong> Start immediately without creating an account. Your data will be stored locally in your browser.</li>
+                                    <li><strong>Create Account:</strong> Sign up for a free account to sync your data across devices and access advanced features.</li>
+                                </ol>
+                                <p>Simply click "Get Started" on the homepage and choose your preferred option.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item" data-category="getting-started">
+                        <button class="faq-question" aria-expanded="false">
+                            <span class="question-text">What's the difference between Guest Mode and having an account?</span>
+                            <span class="question-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="answer-content">
+                                <p><strong>Guest Mode:</strong></p>
+                                <ul>
+                                    <li>Start immediately without registration</li>
+                                    <li>Data stored locally in your browser</li>
+                                    <li>Data will be lost if you clear browser data or use a different device</li>
+                                    <li>Perfect for one-time use or testing</li>
+                                </ul>
+                                <p><strong>Account Mode:</strong></p>
+                                <ul>
+                                    <li>Data synced across all your devices</li>
+                                    <li>Secure cloud backup</li>
+                                    <li>Real-time collaboration with other users</li>
+                                    <li>Access to advanced features and analytics</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Groups & Members -->
+                    <div class="faq-item" data-category="groups">
+                        <button class="faq-question" aria-expanded="false">
+                            <span class="question-text">How do I create and manage groups?</span>
+                            <span class="question-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="answer-content">
+                                <p>Creating and managing groups is simple:</p>
+                                <ol>
+                                    <li>Go to the Dashboard and click "Create Group"</li>
+                                    <li>Enter a group name and description</li>
+                                    <li>Choose your default currency</li>
+                                    <li>Add members by name and email (optional)</li>
+                                    <li>Share the group link with others to invite them</li>
+                                </ol>
+                                <p>You can edit group details, add/remove members, and manage permissions at any time.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item" data-category="groups">
+                        <button class="faq-question" aria-expanded="false">
+                            <span class="question-text">Can I invite people who don't have accounts?</span>
+                            <span class="question-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="answer-content">
+                                <p>Yes! SplitTheBill is designed to be inclusive:</p>
+                                <ul>
+                                    <li>You can add members by name only, even if they don't have accounts</li>
+                                    <li>Share a group link that allows guest access</li>
+                                    <li>Members can join in guest mode and upgrade to accounts later</li>
+                                    <li>All data will be preserved when they create accounts</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Expenses & Splitting -->
+                    <div class="faq-item" data-category="expenses">
+                        <button class="faq-question" aria-expanded="false">
+                            <span class="question-text">What splitting methods are available?</span>
+                            <span class="question-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="answer-content">
+                                <p>SplitTheBill offers flexible splitting options:</p>
+                                <ul>
+                                    <li><strong>Equal Split:</strong> Divide the expense equally among all members</li>
+                                    <li><strong>Custom Amounts:</strong> Specify exact amounts for each person</li>
+                                    <li><strong>Percentage Split:</strong> Assign percentages to each member</li>
+                                    <li><strong>Share-based Split:</strong> Allocate based on shares (e.g., 2 shares for one person, 1 share for another)</li>
+                                </ul>
+                                <p>You can also exclude specific members from an expense if needed.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item" data-category="expenses">
+                        <button class="faq-question" aria-expanded="false">
+                            <span class="question-text">How do I track who owes what?</span>
+                            <span class="question-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="answer-content">
+                                <p>SplitTheBill automatically calculates and tracks balances:</p>
+                                <ul>
+                                    <li>View individual balances for each group member</li>
+                                    <li>See who owes money and who is owed money</li>
+                                    <li>Get settlement suggestions to minimize transactions</li>
+                                    <li>Mark payments as settled when money is exchanged</li>
+                                    <li>Export detailed reports and summaries</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item" data-category="expenses">
+                        <button class="faq-question" aria-expanded="false">
+                            <span class="question-text">Can I add receipts to expenses?</span>
+                            <span class="question-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="answer-content">
+                                <p>Yes! You can attach receipt images to any expense:</p>
+                                <ul>
+                                    <li>Upload photos directly from your phone or computer</li>
+                                    <li>Supports common image formats (JPG, PNG, etc.)</li>
+                                    <li>Receipts are stored securely and can be viewed by group members</li>
+                                    <li>Include receipts in PDF exports for record-keeping</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Account & Data -->
+                    <div class="faq-item" data-category="account">
+                        <button class="faq-question" aria-expanded="false">
+                            <span class="question-text">How do I upgrade from Guest Mode to an account?</span>
+                            <span class="question-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="answer-content">
+                                <p>Upgrading is seamless and preserves all your data:</p>
+                                <ol>
+                                    <li>Click "Create Account" in the guest mode warning or user menu</li>
+                                    <li>Enter your email and create a password</li>
+                                    <li>Verify your email address</li>
+                                    <li>All your existing groups, members, and expenses will be automatically migrated</li>
+                                </ol>
+                                <p>The process takes less than a minute and you won't lose any data.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item" data-category="account">
+                        <button class="faq-question" aria-expanded="false">
+                            <span class="question-text">Is my data secure and private?</span>
+                            <span class="question-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="answer-content">
+                                <p>Yes, we take data security and privacy seriously:</p>
+                                <ul>
+                                    <li>All data is encrypted in transit and at rest</li>
+                                    <li>We use Firebase's enterprise-grade security infrastructure</li>
+                                    <li>Guest mode data stays on your device only</li>
+                                    <li>Account data is backed up securely in the cloud</li>
+                                    <li>We never share your personal information with third parties</li>
+                                    <li>You can export or delete your data at any time</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Technical Issues -->
+                    <div class="faq-item" data-category="technical">
+                        <button class="faq-question" aria-expanded="false">
+                            <span class="question-text">What browsers are supported?</span>
+                            <span class="question-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="answer-content">
+                                <p>SplitTheBill works on all modern browsers:</p>
+                                <ul>
+                                    <li><strong>Desktop:</strong> Chrome, Firefox, Safari, Edge (latest versions)</li>
+                                    <li><strong>Mobile:</strong> Chrome Mobile, Safari Mobile, Firefox Mobile</li>
+                                    <li><strong>PWA Support:</strong> Can be installed as an app on most devices</li>
+                                </ul>
+                                <p>For the best experience, we recommend using the latest version of your preferred browser.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item" data-category="technical">
+                        <button class="faq-question" aria-expanded="false">
+                            <span class="question-text">Does SplitTheBill work offline?</span>
+                            <span class="question-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="answer-content">
+                                <p>Yes! SplitTheBill is designed to work offline:</p>
+                                <ul>
+                                    <li>View and edit existing data without internet connection</li>
+                                    <li>Add new expenses and members offline</li>
+                                    <li>Changes sync automatically when you're back online</li>
+                                    <li>Install as a PWA for native app-like experience</li>
+                                </ul>
+                                <p>Note: Some features like real-time collaboration require an internet connection.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item" data-category="technical">
+                        <button class="faq-question" aria-expanded="false">
+                            <span class="question-text">How do I install SplitTheBill as an app?</span>
+                            <span class="question-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="answer-content">
+                                <p>SplitTheBill can be installed as a Progressive Web App (PWA):</p>
+                                <p><strong>On Desktop:</strong></p>
+                                <ol>
+                                    <li>Visit SplitTheBill in Chrome, Edge, or Firefox</li>
+                                    <li>Look for the install icon in the address bar</li>
+                                    <li>Click "Install" when prompted</li>
+                                </ol>
+                                <p><strong>On Mobile:</strong></p>
+                                <ol>
+                                    <li>Open SplitTheBill in your mobile browser</li>
+                                    <li>Tap the share button (iOS) or menu (Android)</li>
+                                    <li>Select "Add to Home Screen"</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- No Results Message -->
+                <div id="no-results" class="no-results" style="display: none;">
+                    <div class="no-results-icon">🔍</div>
+                    <h3 class="no-results-title">No results found</h3>
+                    <p class="no-results-description">
+                        We couldn't find any questions matching your search. Try different keywords or browse by category.
+                    </p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Contact Section -->
+        <section class="contact-section">
+            <div class="container">
+                <div class="contact-content">
+                    <h2 class="contact-title">Still need help?</h2>
+                    <p class="contact-description">
+                        Can't find the answer you're looking for? Our support team is here to help.
+                    </p>
+                    <div class="contact-actions">
+                        <a href="mailto:support@splitthebill.app" class="btn btn-primary">
+                            <span class="btn-icon">📧</span>
+                            <span>Contact Support</span>
+                        </a>
+                        <a href="/dashboard.html" class="btn btn-secondary">
+                            <span class="btn-icon">🚀</span>
+                            <span>Go to Dashboard</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <img src="/assets/images/logo.svg" alt="SplitTheBill" class="footer-logo">
+                    <span class="footer-brand-text">SplitTheBill</span>
+                </div>
+                
+                <div class="footer-links">
+                    <a href="/" class="footer-link">Home</a>
+                    <a href="/dashboard.html" class="footer-link">Dashboard</a>
+                    <a href="/faq.html" class="footer-link">FAQ</a>
+                    <a href="mailto:support@splitthebill.app" class="footer-link">Support</a>
+                </div>
+                
+                <div class="footer-info">
+                    <p class="footer-text">&copy; 2024 SplitTheBill. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Scripts -->
+    <script src="/js/utils.js"></script>
+    <script src="/js/faq.js"></script>
+</body>
+</html>

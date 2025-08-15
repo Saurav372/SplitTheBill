@@ -1,0 +1,21 @@
+<svg width="120" height="40" viewBox="0 0 120 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Logo Background -->
+  <rect width="120" height="40" rx="8" fill="#2563eb"/>
+  
+  <!-- Split Symbol -->
+  <g transform="translate(8, 8)">
+    <!-- Receipt Icon -->
+    <rect x="2" y="2" width="12" height="16" rx="1" fill="white" opacity="0.9"/>
+    <line x1="4" y1="6" x2="12" y2="6" stroke="#2563eb" stroke-width="0.5"/>
+    <line x1="4" y1="8" x2="12" y2="8" stroke="#2563eb" stroke-width="0.5"/>
+    <line x1="4" y1="10" x2="12" y2="10" stroke="#2563eb" stroke-width="0.5"/>
+    <line x1="4" y1="14" x2="12" y2="14" stroke="#2563eb" stroke-width="1"/>
+    
+    <!-- Split Arrow -->
+    <path d="M8 20 L6 18 M8 20 L10 18 M8 20 L8 22" stroke="white" stroke-width="1" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Text -->
+  <text x="28" y="16" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">SplitTheBill</text>
+  <text x="28" y="28" font-family="Arial, sans-serif" font-size="6" fill="white" opacity="0.8">Expense Sharing</text>
+</svg>

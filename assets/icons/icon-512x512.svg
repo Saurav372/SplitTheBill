@@ -1,0 +1,90 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="256" cy="256" r="256" fill="#2563eb"/>
+  
+  <!-- White Background for Icon -->
+  <circle cx="256" cy="256" r="192" fill="white"/>
+  
+  <!-- Main Icon - Split Bill Symbol -->
+  <g transform="translate(128, 128)">
+    <!-- Receipt/Bill Shape -->
+    <rect x="53" y="43" width="150" height="192" rx="10" fill="#2563eb" stroke="#1d4ed8" stroke-width="5"/>
+    
+    <!-- Receipt Top Tear -->
+    <path d="M53 43 L64 32 L75 43 L86 32 L97 43 L108 32 L119 43 L130 32 L141 43 L152 32 L163 43 L174 32 L185 43 L196 32 L203 43" 
+          stroke="#1d4ed8" stroke-width="5" fill="none"/>
+    
+    <!-- Bill Lines -->
+    <line x1="75" y1="75" x2="181" y2="75" stroke="white" stroke-width="5" stroke-linecap="round"/>
+    <line x1="75" y1="96" x2="181" y2="96" stroke="white" stroke-width="5" stroke-linecap="round"/>
+    <line x1="75" y1="117" x2="181" y2="117" stroke="white" stroke-width="5" stroke-linecap="round"/>
+    <line x1="75" y1="138" x2="181" y2="138" stroke="white" stroke-width="5" stroke-linecap="round"/>
+    <line x1="75" y1="159" x2="181" y2="159" stroke="white" stroke-width="5" stroke-linecap="round"/>
+    
+    <!-- Total Line (Thicker) -->
+    <line x1="75" y1="192" x2="181" y2="192" stroke="white" stroke-width="8" stroke-linecap="round"/>
+    
+    <!-- Split Arrow -->
+    <g transform="translate(128, 235)">
+      <!-- Arrow pointing left -->
+      <path d="M-32 21 L-53 0 L-32 -21" stroke="#16a34a" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <line x1="-53" y1="0" x2="-11" y2="0" stroke="#16a34a" stroke-width="8" stroke-linecap="round"/>
+      
+      <!-- Arrow pointing right -->
+      <path d="M32 21 L53 0 L32 -21" stroke="#16a34a" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <line x1="53" y1="0" x2="11" y2="0" stroke="#16a34a" stroke-width="8" stroke-linecap="round"/>
+    </g>
+    
+    <!-- People Icons -->
+    <!-- Person 1 (Left) -->
+    <g transform="translate(21, 235)">
+      <circle cx="21" cy="16" r="11" fill="#16a34a"/>
+      <path d="M5 48 C5 37 12 32 21 32 C30 32 37 37 37 48" stroke="#16a34a" stroke-width="5" fill="none" stroke-linecap="round"/>
+    </g>
+    
+    <!-- Person 2 (Right) -->
+    <g transform="translate(197, 235)">
+      <circle cx="21" cy="16" r="11" fill="#16a34a"/>
+      <path d="M5 48 C5 37 12 32 21 32 C30 32 37 37 37 48" stroke="#16a34a" stroke-width="5" fill="none" stroke-linecap="round"/>
+    </g>
+    
+    <!-- Dollar Signs -->
+    <g transform="translate(64, 256)">
+      <text x="0" y="0" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="#16a34a">$</text>
+    </g>
+    <g transform="translate(171, 256)">
+      <text x="0" y="0" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="#16a34a">$</text>
+    </g>
+    
+    <!-- Additional People for Group Splitting -->
+    <!-- Person 3 (Bottom Left) -->
+    <g transform="translate(64, 288)">
+      <circle cx="11" cy="8" r="6" fill="#16a34a" opacity="0.7"/>
+      <path d="M2 24 C2 19 6 16 11 16 C16 16 20 19 20 24" stroke="#16a34a" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.7"/>
+    </g>
+    
+    <!-- Person 4 (Bottom Right) -->
+    <g transform="translate(181, 288)">
+      <circle cx="11" cy="8" r="6" fill="#16a34a" opacity="0.7"/>
+      <path d="M2 24 C2 19 6 16 11 16 C16 16 20 19 20 24" stroke="#16a34a" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.7"/>
+    </g>
+  </g>
+  
+  <!-- Decorative Elements -->
+  <circle cx="85" cy="85" r="8" fill="#60a5fa" opacity="0.6"/>
+  <circle cx="427" cy="107" r="5" fill="#60a5fa" opacity="0.4"/>
+  <circle cx="64" cy="427" r="5" fill="#60a5fa" opacity="0.4"/>
+  <circle cx="448" cy="405" r="8" fill="#60a5fa" opacity="0.6"/>
+  
+  <!-- Additional decorative coins -->
+  <circle cx="128" cy="405" r="6" fill="#fbbf24" opacity="0.5"/>
+  <circle cx="384" cy="85" r="6" fill="#fbbf24" opacity="0.5"/>
+  
+  <!-- Money symbols -->
+  <g transform="translate(405, 128)">
+    <text x="0" y="0" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#16a34a" opacity="0.3">$</text>
+  </g>
+  <g transform="translate(85, 384)">
+    <text x="0" y="0" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#16a34a" opacity="0.3">€</text>
+  </g>
+</svg>

@@ -1,0 +1,64 @@
+<svg width="192" height="192" viewBox="0 0 192 192" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="96" cy="96" r="96" fill="#2563eb"/>
+  
+  <!-- White Background for Icon -->
+  <circle cx="96" cy="96" r="72" fill="white"/>
+  
+  <!-- Main Icon - Split Bill Symbol -->
+  <g transform="translate(48, 48)">
+    <!-- Receipt/Bill Shape -->
+    <rect x="20" y="16" width="56" height="72" rx="4" fill="#2563eb" stroke="#1d4ed8" stroke-width="2"/>
+    
+    <!-- Receipt Top Tear -->
+    <path d="M20 16 L24 12 L28 16 L32 12 L36 16 L40 12 L44 16 L48 12 L52 16 L56 12 L60 16 L64 12 L68 16 L72 12 L76 16" 
+          stroke="#1d4ed8" stroke-width="2" fill="none"/>
+    
+    <!-- Bill Lines -->
+    <line x1="28" y1="28" x2="68" y2="28" stroke="white" stroke-width="2" stroke-linecap="round"/>
+    <line x1="28" y1="36" x2="68" y2="36" stroke="white" stroke-width="2" stroke-linecap="round"/>
+    <line x1="28" y1="44" x2="68" y2="44" stroke="white" stroke-width="2" stroke-linecap="round"/>
+    <line x1="28" y1="52" x2="68" y2="52" stroke="white" stroke-width="2" stroke-linecap="round"/>
+    
+    <!-- Total Line (Thicker) -->
+    <line x1="28" y1="64" x2="68" y2="64" stroke="white" stroke-width="3" stroke-linecap="round"/>
+    
+    <!-- Split Arrow -->
+    <g transform="translate(48, 72)">
+      <!-- Arrow pointing left -->
+      <path d="M-12 8 L-20 0 L-12 -8" stroke="#16a34a" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <line x1="-20" y1="0" x2="-4" y2="0" stroke="#16a34a" stroke-width="3" stroke-linecap="round"/>
+      
+      <!-- Arrow pointing right -->
+      <path d="M12 8 L20 0 L12 -8" stroke="#16a34a" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <line x1="20" y1="0" x2="4" y2="0" stroke="#16a34a" stroke-width="3" stroke-linecap="round"/>
+    </g>
+    
+    <!-- People Icons -->
+    <!-- Person 1 (Left) -->
+    <g transform="translate(8, 88)">
+      <circle cx="8" cy="6" r="4" fill="#16a34a"/>
+      <path d="M2 18 C2 14 5 12 8 12 C11 12 14 14 14 18" stroke="#16a34a" stroke-width="2" fill="none" stroke-linecap="round"/>
+    </g>
+    
+    <!-- Person 2 (Right) -->
+    <g transform="translate(74, 88)">
+      <circle cx="8" cy="6" r="4" fill="#16a34a"/>
+      <path d="M2 18 C2 14 5 12 8 12 C11 12 14 14 14 18" stroke="#16a34a" stroke-width="2" fill="none" stroke-linecap="round"/>
+    </g>
+    
+    <!-- Dollar Signs -->
+    <g transform="translate(24, 96)">
+      <text x="0" y="0" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#16a34a">$</text>
+    </g>
+    <g transform="translate(64, 96)">
+      <text x="0" y="0" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#16a34a">$</text>
+    </g>
+  </g>
+  
+  <!-- Decorative Elements -->
+  <circle cx="32" cy="32" r="3" fill="#60a5fa" opacity="0.6"/>
+  <circle cx="160" cy="40" r="2" fill="#60a5fa" opacity="0.4"/>
+  <circle cx="24" cy="160" r="2" fill="#60a5fa" opacity="0.4"/>
+  <circle cx="168" cy="152" r="3" fill="#60a5fa" opacity="0.6"/>
+</svg>

@@ -1,0 +1,32 @@
+<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="40" cy="40" r="40" fill="#f0fdf4"/>
+  <circle cx="40" cy="40" r="32" fill="#16a34a" opacity="0.1"/>
+  
+  <!-- Add Expense Icon -->
+  <g transform="translate(20, 15)">
+    <!-- Receipt -->
+    <rect x="8" y="5" width="24" height="32" rx="2" fill="#16a34a" opacity="0.9"/>
+    
+    <!-- Receipt Lines -->
+    <line x1="12" y1="12" x2="28" y2="12" stroke="white" stroke-width="1.5"/>
+    <line x1="12" y1="16" x2="28" y2="16" stroke="white" stroke-width="1.5"/>
+    <line x1="12" y1="20" x2="28" y2="20" stroke="white" stroke-width="1.5"/>
+    <line x1="12" y1="24" x2="28" y2="24" stroke="white" stroke-width="1.5"/>
+    
+    <!-- Total Line -->
+    <line x1="12" y1="30" x2="28" y2="30" stroke="white" stroke-width="2"/>
+    
+    <!-- Dollar Sign -->
+    <text x="20" y="45" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="white">$</text>
+    
+    <!-- Plus Icon -->
+    <circle cx="32" cy="8" r="6" fill="#fbbf24"/>
+    <line x1="29" y1="8" x2="35" y2="8" stroke="white" stroke-width="1.5"/>
+    <line x1="32" y1="5" x2="32" y2="11" stroke="white" stroke-width="1.5"/>
+  </g>
+  
+  <!-- Step Number -->
+  <circle cx="65" cy="15" r="8" fill="#16a34a"/>
+  <text x="65" y="19" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">2</text>
+</svg>

@@ -1,0 +1,31 @@
+<svg width="144" height="144" viewBox="0 0 144 144" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="144" height="144" rx="20" fill="#2563EB"/>
+  
+  <!-- Receipt -->
+  <rect x="36" y="28" width="48" height="64" rx="4" fill="white" stroke="#E5E7EB" stroke-width="2"/>
+  
+  <!-- Receipt lines -->
+  <line x1="42" y1="38" x2="78" y2="38" stroke="#9CA3AF" stroke-width="2"/>
+  <line x1="42" y1="46" x2="72" y2="46" stroke="#9CA3AF" stroke-width="2"/>
+  <line x1="42" y1="54" x2="75" y2="54" stroke="#9CA3AF" stroke-width="2"/>
+  <line x1="42" y1="62" x2="69" y2="62" stroke="#9CA3AF" stroke-width="2"/>
+  
+  <!-- Dollar sign -->
+  <circle cx="60" cy="76" r="8" fill="#10B981"/>
+  <text x="60" y="82" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold">$</text>
+  
+  <!-- Split arrows -->
+  <path d="M24 72 L36 72 M30 66 L24 72 L30 78" stroke="#10B981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M84 72 L96 72 M90 66 L96 72 L90 78" stroke="#10B981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  
+  <!-- People icons -->
+  <circle cx="18" cy="108" r="8" fill="#F59E0B"/>
+  <rect x="10" y="116" width="16" height="12" rx="8" fill="#F59E0B"/>
+  
+  <circle cx="72" cy="108" r="8" fill="#F59E0B"/>
+  <rect x="64" y="116" width="16" height="12" rx="8" fill="#F59E0B"/>
+  
+  <circle cx="126" cy="108" r="8" fill="#F59E0B"/>
+  <rect x="118" y="116" width="16" height="12" rx="8" fill="#F59E0B"/>
+</svg>

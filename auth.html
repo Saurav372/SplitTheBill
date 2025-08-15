@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sign in to SplitTheBill or try guest mode - No sign-up required for basic features.">
+    <title>Sign In - SplitTheBill</title>
+    
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#3B82F6">
+    <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/auth.css">
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+</head>
+<body class="auth-body">
+    <!-- Navigation -->
+    <nav class="auth-nav">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">
+                <img src="/assets/images/logo.svg" alt="SplitTheBill Logo" class="logo-img">
+                <span class="logo-text">SplitTheBill</span>
+            </a>
+            <a href="/" class="nav-back">← Back to Home</a>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <main class="auth-main">
+        <div class="auth-container">
+            <!-- Guest Mode Banner -->
+            <div id="guest-banner" class="guest-banner">
+                <div class="banner-content">
+                    <h2 class="banner-title">🚀 Try Guest Mode</h2>
+                    <p class="banner-description">
+                        Start splitting bills immediately without creating an account. 
+                        Your data stays on this device.
+                    </p>
+                    <button id="guest-mode-btn" class="btn btn-primary btn-large">
+                        Continue as Guest
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Auth Forms Container -->
+            <div class="auth-forms">
+                <!-- Sign In Form -->
+                <div id="signin-form" class="auth-form active">
+                    <div class="form-header">
+                        <h1 class="form-title">Welcome Back</h1>
+                        <p class="form-description">
+                            Sign in to sync your data across devices and access advanced features.
+                        </p>
+                    </div>
+                    
+                    <form id="signin-form-element" class="form">
+                        <div class="form-group">
+                            <label for="signin-email" class="form-label">Email</label>
+                            <input 
+                                type="email" 
+                                id="signin-email" 
+                                name="email" 
+                                class="form-input" 
+                                placeholder="Enter your email"
+                                required
+                                autocomplete="email"
+                            >
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="signin-password" class="form-label">Password</label>
+                            <div class="password-input-wrapper">
+                                <input 
+                                    type="password" 
+                                    id="signin-password" 
+                                    name="password" 
+                                    class="form-input" 
+                                    placeholder="Enter your password"
+                                    required
+                                    autocomplete="current-password"
+                                >
+                                <button type="button" class="password-toggle" aria-label="Toggle password visibility">
+                                    <span class="password-toggle-icon">👁️</span>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="form-options">
+                            <label class="checkbox-wrapper">
+                                <input type="checkbox" id="remember-me" name="remember">
+                                <span class="checkbox-custom"></span>
+                                <span class="checkbox-label">Remember me</span>
+                            </label>
+                            <a href="#" id="forgot-password-link" class="forgot-link">Forgot password?</a>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-large btn-full" id="signin-btn">
+                            <span class="btn-text">Sign In</span>
+                            <span class="btn-loading" style="display: none;">Signing in...</span>
+                        </button>
+                        
+                        <div class="form-divider">
+                            <span class="divider-text">or continue with</span>
+                        </div>
+                        
+                        <div class="social-buttons">
+                            <button type="button" id="google-signin-btn" class="btn btn-social btn-google">
+                                <img src="/assets/icons/google.svg" alt="Google" class="social-icon">
+                                <span>Continue with Google</span>
+                            </button>
+                            <button type="button" id="apple-signin-btn" class="btn btn-social btn-apple">
+                                <img src="/assets/icons/apple.svg" alt="Apple" class="social-icon">
+                                <span>Continue with Apple</span>
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <div class="form-footer">
+                        <p class="form-switch">
+                            Don't have an account? 
+                            <a href="#" id="show-signup" class="switch-link">Sign up</a>
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Sign Up Form -->
+                <div id="signup-form" class="auth-form">
+                    <div class="form-header">
+                        <h1 class="form-title">Create Account</h1>
+                        <p class="form-description">
+                            Join thousands of users who trust SplitTheBill for expense sharing.
+                        </p>
+                    </div>
+                    
+                    <form id="signup-form-element" class="form">
+                        <div class="form-group">
+                            <label for="signup-name" class="form-label">Full Name</label>
+                            <input 
+                                type="text" 
+                                id="signup-name" 
+                                name="name" 
+                                class="form-input" 
+                                placeholder="Enter your full name"
+                                required
+                                autocomplete="name"
+                            >
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="signup-email" class="form-label">Email</label>
+                            <input 
+                                type="email" 
+                                id="signup-email" 
+                                name="email" 
+                                class="form-input" 
+                                placeholder="Enter your email"
+                                required
+                                autocomplete="email"
+                            >
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="signup-password" class="form-label">Password</label>
+                            <div class="password-input-wrapper">
+                                <input 
+                                    type="password" 
+                                    id="signup-password" 
+                                    name="password" 
+                                    class="form-input" 
+                                    placeholder="Create a password"
+                                    required
+                                    autocomplete="new-password"
+                                    minlength="6"
+                                >
+                                <button type="button" class="password-toggle" aria-label="Toggle password visibility">
+                                    <span class="password-toggle-icon">👁️</span>
+                                </button>
+                            </div>
+                            <div class="password-strength">
+                                <div class="strength-bar">
+                                    <div class="strength-fill"></div>
+                                </div>
+                                <span class="strength-text">Password strength</span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="signup-confirm-password" class="form-label">Confirm Password</label>
+                            <input 
+                                type="password" 
+                                id="signup-confirm-password" 
+                                name="confirmPassword" 
+                                class="form-input" 
+                                placeholder="Confirm your password"
+                                required
+                                autocomplete="new-password"
+                            >
+                        </div>
+                        
+                        <div class="form-options">
+                            <label class="checkbox-wrapper">
+                                <input type="checkbox" id="terms-agreement" name="terms" required>
+                                <span class="checkbox-custom"></span>
+                                <span class="checkbox-label">
+                                    I agree to the <a href="/terms.html" target="_blank">Terms of Service</a> 
+                                    and <a href="/privacy.html" target="_blank">Privacy Policy</a>
+                                </span>
+                            </label>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-large btn-full" id="signup-btn">
+                            <span class="btn-text">Create Account</span>
+                            <span class="btn-loading" style="display: none;">Creating account...</span>
+                        </button>
+                        
+                        <div class="form-divider">
+                            <span class="divider-text">or continue with</span>
+                        </div>
+                        
+                        <div class="social-buttons">
+                            <button type="button" id="google-signup-btn" class="btn btn-social btn-google">
+                                <img src="/assets/icons/google.svg" alt="Google" class="social-icon">
+                                <span>Continue with Google</span>
+                            </button>
+                            <button type="button" id="apple-signup-btn" class="btn btn-social btn-apple">
+                                <img src="/assets/icons/apple.svg" alt="Apple" class="social-icon">
+                                <span>Continue with Apple</span>
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <div class="form-footer">
+                        <p class="form-switch">
+                            Already have an account? 
+                            <a href="#" id="show-signin" class="switch-link">Sign in</a>
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Forgot Password Form -->
+                <div id="forgot-password-form" class="auth-form">
+                    <div class="form-header">
+                        <h1 class="form-title">Reset Password</h1>
+                        <p class="form-description">
+                            Enter your email address and we'll send you a link to reset your password.
+                        </p>
+                    </div>
+                    
+                    <form id="forgot-password-form-element" class="form">
+                        <div class="form-group">
+                            <label for="forgot-email" class="form-label">Email</label>
+                            <input 
+                                type="email" 
+                                id="forgot-email" 
+                                name="email" 
+                                class="form-input" 
+                                placeholder="Enter your email"
+                                required
+                                autocomplete="email"
+                            >
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-large btn-full" id="forgot-btn">
+                            <span class="btn-text">Send Reset Link</span>
+                            <span class="btn-loading" style="display: none;">Sending...</span>
+                        </button>
+                    </form>
+                    
+                    <div class="form-footer">
+                        <p class="form-switch">
+                            Remember your password? 
+                            <a href="#" id="back-to-signin" class="switch-link">Sign in</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+    
+    <!-- Scripts -->
+    <script src="/js/firebase-config.js"></script>
+    <script src="/js/utils.js"></script>
+    <script src="/js/auth.js"></script>
+    
+    <script>
+        // Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then((registration) => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch((registrationError) => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>

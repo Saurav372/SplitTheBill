@@ -1,0 +1,23 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="16" height="16" rx="3" fill="#2563eb"/>
+  
+  <!-- Split Bill Icon -->
+  <g transform="translate(3, 3)">
+    <!-- Receipt -->
+    <rect x="1.5" y="1" width="7" height="8" rx="0.5" fill="white"/>
+    
+    <!-- Receipt Lines -->
+    <line x1="2.5" y1="2.5" x2="7.5" y2="2.5" stroke="#2563eb" stroke-width="0.4"/>
+    <line x1="2.5" y1="3.5" x2="7.5" y2="3.5" stroke="#2563eb" stroke-width="0.4"/>
+    <line x1="2.5" y1="4.5" x2="7.5" y2="4.5" stroke="#2563eb" stroke-width="0.4"/>
+    <line x1="2.5" y1="6.5" x2="7.5" y2="6.5" stroke="#2563eb" stroke-width="0.6"/>
+    
+    <!-- Split Arrows -->
+    <path d="M3 9 L1 8 L3 7" stroke="#16a34a" stroke-width="0.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M7 9 L9 8 L7 7" stroke="#16a34a" stroke-width="0.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    
+    <!-- Dollar Sign -->
+    <text x="5" y="6" text-anchor="middle" font-family="Arial, sans-serif" font-size="3" font-weight="bold" fill="#2563eb">$</text>
+  </g>
+</svg>

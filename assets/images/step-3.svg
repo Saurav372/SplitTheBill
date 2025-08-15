@@ -1,0 +1,43 @@
+<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="40" cy="40" r="40" fill="#fef3c7"/>
+  <circle cx="40" cy="40" r="32" fill="#f59e0b" opacity="0.1"/>
+  
+  <!-- Split & Settle Icon -->
+  <g transform="translate(15, 20)">
+    <!-- Central Money Symbol -->
+    <circle cx="25" cy="20" r="8" fill="#f59e0b"/>
+    <text x="25" y="24" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" font-weight="bold" fill="white">$</text>
+    
+    <!-- Person 1 (Left) -->
+    <circle cx="8" cy="8" r="4" fill="#2563eb"/>
+    <path d="M4 20 C4 17 6 16 8 16 C10 16 12 17 12 20" stroke="#2563eb" stroke-width="1.5" fill="none"/>
+    
+    <!-- Person 2 (Right) -->
+    <circle cx="42" cy="8" r="4" fill="#2563eb"/>
+    <path d="M38 20 C38 17 40 16 42 16 C44 16 46 17 46 20" stroke="#2563eb" stroke-width="1.5" fill="none"/>
+    
+    <!-- Person 3 (Bottom) -->
+    <circle cx="25" cy="35" r="4" fill="#2563eb"/>
+    <path d="M21 47 C21 44 23 43 25 43 C27 43 29 44 29 47" stroke="#2563eb" stroke-width="1.5" fill="none"/>
+    
+    <!-- Arrows showing split -->
+    <path d="M17 15 L20 18" stroke="#16a34a" stroke-width="2" stroke-linecap="round"/>
+    <path d="M33 15 L30 18" stroke="#16a34a" stroke-width="2" stroke-linecap="round"/>
+    <path d="M25 28 L25 31" stroke="#16a34a" stroke-width="2" stroke-linecap="round"/>
+    
+    <!-- Equal signs -->
+    <g transform="translate(5, 25)">
+      <line x1="0" y1="0" x2="3" y2="0" stroke="#16a34a" stroke-width="1"/>
+      <line x1="0" y1="2" x2="3" y2="2" stroke="#16a34a" stroke-width="1"/>
+    </g>
+    <g transform="translate(42, 25)">
+      <line x1="0" y1="0" x2="3" y2="0" stroke="#16a34a" stroke-width="1"/>
+      <line x1="0" y1="2" x2="3" y2="2" stroke="#16a34a" stroke-width="1"/>
+    </g>
+  </g>
+  
+  <!-- Step Number -->
+  <circle cx="65" cy="15" r="8" fill="#f59e0b"/>
+  <text x="65" y="19" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white">3</text>
+</svg>
