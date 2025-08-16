@@ -30,11 +30,8 @@ const STATIC_ASSETS = [
   '/js/expense-manager.js',
   '/js/faq.js',
   '/js/firebase-config.js',
-  '/assets/icons/icon-144x144.svg',
-  '/assets/icons/icon-192x192.svg',
-  '/assets/icons/icon-512x512.svg',
-  '/assets/icons/favicon.svg',
-  '/assets/images/logo.svg'
+  '/assets/placeholder.svg',
+  '/assets/placeholder-icon.svg'
 ];
 
 // Network-first resources (always try network first)
@@ -310,8 +307,8 @@ self.addEventListener('push', (event) => {
   
   const options = {
     body: 'You have new expense updates!',
-    icon: '/assets/icons/icon-192x192.png',
-    badge: '/assets/icons/badge-72x72.png',
+    icon: '/assets/placeholder-icon.svg',
+    badge: '/assets/placeholder-icon.svg',
     vibrate: [200, 100, 200],
     data: {
       url: '/dashboard.html'
@@ -320,12 +317,12 @@ self.addEventListener('push', (event) => {
       {
         action: 'view',
         title: 'View Details',
-        icon: '/assets/icons/action-view.png'
+        icon: '/assets/placeholder-icon.svg'
       },
       {
         action: 'dismiss',
         title: 'Dismiss',
-        icon: '/assets/icons/action-dismiss.png'
+        icon: '/assets/placeholder-icon.svg'
       }
     ]
   };

@@ -254,13 +254,15 @@ class PDFGenerator {
         if (!member) {
             throw new Error('Member not found');
         }
-
++
++        const nameToShow = member.displayName || member.name || member.email || 'Unknown';
         let yPosition = 20;
 
         // Header
         doc.setFontSize(20);
         doc.setFont('helvetica', 'bold');
-        doc.text(`Individual Report - ${member.name}`, 20, yPosition);
+-        doc.text(`Individual Report - ${member.name}`, 20, yPosition);
++        doc.text(`Individual Report - ${nameToShow}`, 20, yPosition);
         yPosition += 15;
 
         // Member info
@@ -268,7 +270,8 @@ class PDFGenerator {
         doc.setFont('helvetica', 'normal');
         doc.text(`Group: ${options.groupName}`, 20, yPosition);
         yPosition += 8;
-        doc.text(`Member: ${member.name}`, 20, yPosition);
+-        doc.text(`Member: ${member.name}`, 20, yPosition);
++        doc.text(`Member: ${nameToShow}`, 20, yPosition);
         yPosition += 8;
         doc.text(`Report Date: ${new Date().toLocaleDateString()}`, 20, yPosition);
         yPosition += 15;

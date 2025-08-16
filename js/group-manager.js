@@ -12,30 +12,72 @@ class GroupManager {
         this.checkAuthState();
     }
 
+    /**
+     * Check if Firebase is supported in current environment
+     */
+    isFirebaseSupported() {
+        // Check if running in supported protocol
+        const supportedProtocols = ['http:', 'https:', 'chrome-extension:'];
+        if (!supportedProtocols.includes(window.location.protocol)) {
+            return false;
+        }
+        
+        // Check if web storage is enabled
+        try {
+            const testKey = '__firebase_test__';
+            localStorage.setItem(testKey, 'test');
+            localStorage.removeItem(testKey);
+        } catch (error) {
+            return false;
+        }
+        
+        // Check if Firebase is defined and available
+        return typeof firebase !== 'undefined' && firebase.auth;
+    }
+
     checkAuthState() {
-        if (typeof firebase !== 'undefined' && firebase.auth) {
-            firebase.auth().onAuthStateChanged((user) => {
-                if (user) {
-                    this.currentUser = user;
-                    this.isGuest = false;
-                } else {
-                    // Check for guest mode
-                    const guestData = localStorage.getItem('guestUser');
-                    if (guestData) {
-                        this.currentUser = JSON.parse(guestData);
-                        this.isGuest = true;
+        // Check if Firebase is available and environment is supported
+        if (typeof firebase !== 'undefined' && firebase.auth && this.isFirebaseSupported()) {
+            try {
+                firebase.auth().onAuthStateChanged((user) => {
+                    if (user) {
+                        this.currentUser = user;
+                        this.isGuest = false;
+                    } else {
+                        // Check for guest mode
+                        const guestData = localStorage.getItem('guestUser');
+                        if (guestData) {
+                            this.currentUser = JSON.parse(guestData);
+                            this.isGuest = true;
+                        }
                     }
-                }
-                this.loadGroups();
-            });
+                    this.loadGroups();
+                });
+            } catch (error) {
+                console.warn('Firebase auth state listener failed:', error);
+                // Fall back to guest mode
+                this.fallbackToGuestMode();
+            }
         } else {
-            // Fallback for guest mode
+            console.log('Firebase not available or not supported, checking for guest mode...');
+            this.fallbackToGuestMode();
+        }
+    }
+
+    fallbackToGuestMode() {
+        // Fallback for guest mode
+        try {
             const guestData = localStorage.getItem('guestUser');
             if (guestData) {
                 this.currentUser = JSON.parse(guestData);
+                this.currentUser.isGuest = true;
                 this.isGuest = true;
                 this.loadGroups();
+            } else {
+                console.log('No guest data found, starting in offline mode');
             }
+        } catch (error) {
+            console.error('Error loading guest data:', error);
         }
     }
 
@@ -82,7 +124,7 @@ class GroupManager {
         try {
             if (this.isGuest) {
                 // Load from localStorage for guest users
-                const storedGroups = localStorage.getItem('guestGroups');
+                const storedGroups = localStorage.getItem('splitbill_groups');
                 this.groups = storedGroups ? JSON.parse(storedGroups) : [];
             } else if (this.currentUser) {
                 // Load from Firestore for authenticated users
@@ -232,7 +274,7 @@ class GroupManager {
                 if (emailInput.value && nameInput.value) {
                     members.push({
                         email: emailInput.value,
-                        name: nameInput.value,
+                        displayName: nameInput.value,
                         id: this.generateMemberId()
                     });
                 }
@@ -242,7 +284,7 @@ class GroupManager {
             if (this.currentUser) {
                 members.unshift({
                     email: this.currentUser.email,
-                    name: this.currentUser.displayName || this.currentUser.email,
+                    displayName: this.currentUser.displayName || this.currentUser.email,
                     id: this.currentUser.uid || this.currentUser.id,
                     isOwner: true
                 });
@@ -264,7 +306,7 @@ class GroupManager {
             if (this.isGuest) {
                 // Save to localStorage for guest users
                 this.groups.push(groupData);
-                localStorage.setItem('guestGroups', JSON.stringify(this.groups));
+                localStorage.setItem('splitbill_groups', JSON.stringify(this.groups));
             } else {
                 // Save to Firestore for authenticated users
                 await firebase.firestore().collection('groups').doc(groupData.id).set(groupData);
@@ -339,7 +381,7 @@ class GroupManager {
                 const groupIndex = this.groups.findIndex(g => g.id === groupId);
                 if (groupIndex !== -1) {
                     this.groups[groupIndex] = { ...this.groups[groupIndex], ...updatedData };
-                    localStorage.setItem('guestGroups', JSON.stringify(this.groups));
+                    localStorage.setItem('splitbill_groups', JSON.stringify(this.groups));
                 }
             } else {
                 // Update in Firestore for authenticated users
@@ -369,7 +411,7 @@ class GroupManager {
             if (this.isGuest) {
                 // Remove from localStorage for guest users
                 this.groups = this.groups.filter(g => g.id !== groupId);
-                localStorage.setItem('guestGroups', JSON.stringify(this.groups));
+                localStorage.setItem('splitbill_groups', JSON.stringify(this.groups));
             } else {
                 // Remove from Firestore for authenticated users
                 await firebase.firestore().collection('groups').doc(groupId).delete();

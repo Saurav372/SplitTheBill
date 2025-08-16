@@ -28,6 +28,27 @@ class DashboardManager {
             // Initialize I18n first
             await this.i18n.init();
             
+            // Enable guest mode via URL param if specified
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('mode') === 'guest') {
+                localStorage.setItem('splitbill_guest_mode', 'true');
+                // Seed a basic guest user if not present
+                if (!localStorage.getItem('guestUser')) {
+                    const guestUser = {
+                        uid: 'guest',
+                        email: 'guest@splitbill.com',
+                        displayName: 'Guest User',
+                        isGuest: true,
+                        preferences: {
+                            currency: 'USD',
+                            language: this.i18n?.currentLanguage || 'en',
+                            theme: 'light'
+                        }
+                    };
+                    localStorage.setItem('guestUser', JSON.stringify(guestUser));
+                }
+            }
+            
             // Check authentication first
             await this.checkAuthentication();
             
@@ -73,20 +94,101 @@ class DashboardManager {
                 return;
             }
             
-            // Check Firebase authentication
-            firebase.auth().onAuthStateChanged((user) => {
-                if (user) {
-                    this.currentUser = user;
-                    this.hideGuestWarning();
-                    this.loadUserProfile();
-                    resolve(user);
+            // Check if Firebase is available and supported
+            if (!this.isFirebaseSupported()) {
+                // Fall back to guest mode automatically
+                const existingGuest = localStorage.getItem('guestUser');
+                if (existingGuest) {
+                    try {
+                        this.currentUser = { ...JSON.parse(existingGuest), isGuest: true };
+                    } catch (_) {
+                        this.currentUser = {
+                            uid: 'guest',
+                            email: 'guest@splitbill.com',
+                            displayName: 'Guest User',
+                            isGuest: true,
+                            preferences: { currency: 'USD', language: 'en', theme: 'light' }
+                        };
+                    }
                 } else {
-                    // Redirect to auth page if not authenticated
-                    window.location.href = '/auth.html';
-                    reject(new Error('User not authenticated'));
+                    this.currentUser = {
+                        uid: 'guest',
+                        email: 'guest@splitbill.com',
+                        displayName: 'Guest User',
+                        isGuest: true,
+                        preferences: { currency: 'USD', language: 'en', theme: 'light' }
+                    };
+                    localStorage.setItem('guestUser', JSON.stringify(this.currentUser));
                 }
-            });
+                localStorage.setItem('splitbill_guest_mode', 'true');
+                this.showGuestWarning();
+                resolve(this.currentUser);
+                return;
+            }
+            
+            // Check Firebase authentication
+            try {
+                firebase.auth().onAuthStateChanged((user) => {
+                    if (user) {
+                        this.currentUser = user;
+                        this.hideGuestWarning();
+                        this.loadUserProfile();
+                        resolve(user);
+                    } else {
+                        // Redirect to auth page if not authenticated
+                        window.location.href = '/auth.html';
+                        reject(new Error('User not authenticated'));
+                    }
+                });
+            } catch (error) {
+                console.error('Firebase authentication error:', error);
+                // Auto guest fallback on error
+                const existingGuest = localStorage.getItem('guestUser');
+                if (existingGuest) {
+                    try {
+                        this.currentUser = { ...JSON.parse(existingGuest), isGuest: true };
+                        localStorage.setItem('splitbill_guest_mode', 'true');
+                        this.showGuestWarning();
+                        resolve(this.currentUser);
+                        return;
+                    } catch (_) { /* fallthrough */ }
+                }
+                this.currentUser = {
+                    uid: 'guest',
+                    email: 'guest@splitbill.com',
+                    displayName: 'Guest User',
+                    isGuest: true,
+                    preferences: { currency: 'USD', language: 'en', theme: 'light' }
+                };
+                localStorage.setItem('guestUser', JSON.stringify(this.currentUser));
+                localStorage.setItem('splitbill_guest_mode', 'true');
+                this.showGuestWarning();
+                resolve(this.currentUser);
+            }
         });
+    }
+    
+    /**
+     * Check if Firebase is supported in current environment
+     */
+    isFirebaseSupported() {
+        // Check if running in supported protocol
+        const supportedProtocols = ['http:', 'https:', 'chrome-extension:'];
+        if (!supportedProtocols.includes(window.location.protocol)) {
+            return false;
+        }
+        
+        // Check if web storage is enabled
+        try {
+            const testKey = '__firebase_test__';
+            localStorage.setItem(testKey, 'test');
+            localStorage.removeItem(testKey);
+        } catch (error) {
+            return false;
+        }
+        
+        // Check if Firebase is defined and available
+        return typeof firebase !== 'undefined' && firebase.auth;
     }
     
     /**
@@ -412,16 +514,19 @@ class DashboardManager {
      */
     async handleSignOut() {
         try {
-            if (this.currentUser?.isGuest) {
-                // Clear guest mode
-                localStorage.removeItem('splitbill_guest_mode');
-                localStorage.removeItem('splitbill_groups');
-                localStorage.removeItem('splitbill_members');
-                localStorage.removeItem('splitbill_expenses');
-                localStorage.removeItem('splitbill_settlements');
-            } else {
-                // Sign out from Firebase
-                await firebase.auth().signOut();
+            // Always clear local guest-related data
+            localStorage.removeItem('splitbill_guest_mode');
+            localStorage.removeItem('splitbill_groups');
+            localStorage.removeItem('splitbill_members');
+            localStorage.removeItem('splitbill_expenses');
+            localStorage.removeItem('splitbill_settlements');
+            localStorage.removeItem('guestUser');
+
+            if (!this.currentUser?.isGuest) {
+                // Sign out from Firebase only when available and supported
+                if (this.isFirebaseSupported() && typeof firebase !== 'undefined' && firebase.auth) {
+                    await firebase.auth().signOut();
+                }
             }
             
             // Redirect to auth page
@@ -436,6 +541,9 @@ class DashboardManager {
      */
     async updateUserPreferences(preferences) {
         if (!this.currentUser || this.currentUser.isGuest) return;
+        
+        // Ensure Firebase is available before attempting to update
+        if (!this.isFirebaseSupported() || typeof firebase === 'undefined' || !firebase.firestore) return;
         
         try {
             await firebase.firestore()
@@ -1074,7 +1182,7 @@ class DashboardManager {
                     selectedGroup.members.forEach(member => {
                         const option = document.createElement('option');
                         option.value = member.id;
-                        option.textContent = member.name;
+                        option.textContent = member.displayName || member.name || member.email;
                         memberSelect.appendChild(option);
                     });
                 }

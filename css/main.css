@@ -1467,3 +1467,12 @@ input:checked + .toggle-slider:before {
 .form-textarea:focus:not(:focus-visible) {
     outline: none;
 }
+
+/* Placeholder visuals */
+[data-placeholder] {
+    background-color: #f3f4f6; /* light gray bg to signal placeholder */
+    border: 1px dashed #d1d5db; /* subtle dashed border */
+    border-radius: 8px;
+    padding: 0.5rem;
+    opacity: 0.8;
+}

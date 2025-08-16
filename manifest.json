@@ -14,62 +14,56 @@
   "categories": ["finance", "productivity", "utilities"],
   "icons": [
     {
-      "src": "assets/icons/icon-144x144.svg",
+      "src": "assets/placeholder-icon.svg",
       "sizes": "144x144",
       "type": "image/svg+xml",
       "purpose": "maskable any"
     },
     {
-      "src": "assets/icons/icon-192x192.svg",
+      "src": "assets/placeholder-icon.svg",
       "sizes": "192x192",
       "type": "image/svg+xml",
       "purpose": "maskable any"
     },
     {
-      "src": "assets/icons/icon-512x512.svg",
-      "sizes": "512x512",
+      "src": "assets/placeholder-icon.svg",
+      "sizes": "384x384",
       "type": "image/svg+xml",
       "purpose": "maskable any"
     },
     {
-      "src": "assets/icons/icon-384x384.png",
-      "sizes": "384x384",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "assets/icons/icon-512x512.png",
+      "src": "assets/placeholder-icon.svg",
       "sizes": "512x512",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "purpose": "maskable any"
     }
   ],
   "screenshots": [
     {
-      "src": "assets/images/screenshot-mobile-1.png",
+      "src": "assets/placeholder.svg",
       "sizes": "390x844",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "form_factor": "narrow",
       "label": "Dashboard view on mobile"
     },
     {
-      "src": "assets/images/screenshot-mobile-2.png",
+      "src": "assets/placeholder.svg",
       "sizes": "390x844",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "form_factor": "narrow",
       "label": "Expense splitting on mobile"
     },
     {
-      "src": "assets/images/screenshot-desktop-1.png",
+      "src": "assets/placeholder.svg",
       "sizes": "1280x720",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "form_factor": "wide",
       "label": "Dashboard view on desktop"
     },
     {
-      "src": "assets/images/screenshot-desktop-2.png",
+      "src": "assets/placeholder.svg",
       "sizes": "1280x720",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "form_factor": "wide",
       "label": "Group management on desktop"
     }
@@ -82,9 +76,9 @@
       "url": "/dashboard.html?tab=expenses&action=add",
       "icons": [
         {
-          "src": "assets/icons/shortcut-add-expense.png",
+          "src": "assets/placeholder-icon.svg",
           "sizes": "96x96",
-          "type": "image/png"
+          "type": "image/svg+xml"
         }
       ]
     },
@@ -95,9 +89,9 @@
       "url": "/dashboard.html?tab=groups&action=create",
       "icons": [
         {
-          "src": "assets/icons/shortcut-create-group.png",
+          "src": "assets/placeholder-icon.svg",
           "sizes": "96x96",
-          "type": "image/png"
+          "type": "image/svg+xml"
         }
       ]
     },
@@ -108,9 +102,9 @@
       "url": "/dashboard.html?tab=analytics",
       "icons": [
         {
-          "src": "assets/icons/shortcut-analytics.png",
+          "src": "assets/placeholder-icon.svg",
           "sizes": "96x96",
-          "type": "image/png"
+          "type": "image/svg+xml"
         }
       ]
     }

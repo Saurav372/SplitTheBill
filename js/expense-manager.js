@@ -13,30 +13,66 @@ class ExpenseManager {
         this.checkAuthState();
     }
 
+    /**
+     * Check if Firebase is supported in current environment
+     */
+    isFirebaseSupported() {
+        // Check if running in supported protocol
+        const supportedProtocols = ['http:', 'https:', 'chrome-extension:'];
+        if (!supportedProtocols.includes(window.location.protocol)) {
+            return false;
+        }
+        
+        // Check if web storage is enabled
+        try {
+            const testKey = '__firebase_test__';
+            localStorage.setItem(testKey, 'test');
+            localStorage.removeItem(testKey);
+        } catch (error) {
+            return false;
+        }
+        
+        // Check if Firebase is defined and available
+        return typeof firebase !== 'undefined' && firebase.auth;
+    }
+
     checkAuthState() {
-        if (typeof firebase !== 'undefined' && firebase.auth) {
-            firebase.auth().onAuthStateChanged((user) => {
-                if (user) {
-                    this.currentUser = user;
-                    this.isGuest = false;
-                } else {
-                    // Check for guest mode
-                    const guestData = localStorage.getItem('guestUser');
-                    if (guestData) {
-                        this.currentUser = JSON.parse(guestData);
-                        this.isGuest = true;
+        // Check if Firebase is available and environment is supported
+        if (typeof firebase !== 'undefined' && firebase.auth && this.isFirebaseSupported()) {
+            try {
+                firebase.auth().onAuthStateChanged((user) => {
+                    if (user) {
+                        this.currentUser = user;
+                        this.isGuest = false;
+                    } else {
+                        // Check for guest mode
+                        const guestData = localStorage.getItem('guestUser');
+                        if (guestData) {
+                            this.currentUser = JSON.parse(guestData);
+                            this.isGuest = true;
+                        }
                     }
-                }
-                this.loadData();
-            });
-        } else {
-            // Fallback for guest mode
-            const guestData = localStorage.getItem('guestUser');
-            if (guestData) {
-                this.currentUser = JSON.parse(guestData);
-                this.isGuest = true;
-                this.loadData();
+                    this.loadData();
+                });
+            } catch (error) {
+                console.warn('Firebase auth state listener failed:', error);
+                // Fall back to guest mode
+                this.fallbackToGuestMode();
             }
+        } else {
+            console.log('Firebase not available or not supported, checking for guest mode...');
+            this.fallbackToGuestMode();
+        }
+    }
+
+    fallbackToGuestMode() {
+        const guestData = localStorage.getItem('guestUser');
+        if (guestData) {
+            this.currentUser = JSON.parse(guestData);
+            this.isGuest = true;
+            this.loadData();
+        } else {
+            console.log('No guest data found, starting in offline mode');
         }
     }
 
@@ -99,7 +135,7 @@ class ExpenseManager {
     async loadGroups() {
         try {
             if (this.isGuest) {
-                const storedGroups = localStorage.getItem('guestGroups');
+                const storedGroups = localStorage.getItem('splitbill_groups');
                 this.groups = storedGroups ? JSON.parse(storedGroups) : [];
             } else if (this.currentUser) {
                 const groupsRef = firebase.firestore().collection('groups')
@@ -119,7 +155,7 @@ class ExpenseManager {
     async loadExpenses() {
         try {
             if (this.isGuest) {
-                const storedExpenses = localStorage.getItem('guestExpenses');
+                const storedExpenses = localStorage.getItem('splitbill_expenses');
                 this.expenses = storedExpenses ? JSON.parse(storedExpenses) : [];
             } else if (this.currentUser) {
                 const expensesRef = firebase.firestore().collection('expenses')
@@ -288,8 +324,8 @@ class ExpenseManager {
         participantsList.innerHTML = this.selectedGroup.members.map(member => `
             <div class="participant-item">
                 <div class="participant-info">
-                    <div class="participant-avatar">${this.getInitials(member.name)}</div>
-                    <span class="participant-name">${member.name}</span>
+                    <div class="participant-avatar">${this.getInitials(member.displayName || member.name || member.email)}</div>
+                    <span class="participant-name">${member.displayName || member.name || member.email}</span>
                 </div>
                 <div class="participant-controls">
                     <input type="checkbox" class="participant-checkbox" value="${member.id}" checked>
@@ -492,7 +528,7 @@ class ExpenseManager {
 
             if (this.isGuest) {
                 this.expenses.unshift(expenseData);
-                localStorage.setItem('guestExpenses', JSON.stringify(this.expenses));
+                localStorage.setItem('splitbill_expenses', JSON.stringify(this.expenses));
             } else {
                 await firebase.firestore().collection('expenses').doc(expenseData.id).set(expenseData);
                 this.expenses.unshift(expenseData);
@@ -636,7 +672,7 @@ class ExpenseManager {
                 const expenseIndex = this.expenses.findIndex(e => e.id === expenseId);
                 if (expenseIndex !== -1) {
                     this.expenses[expenseIndex] = { ...this.expenses[expenseIndex], ...updatedData };
-                    localStorage.setItem('guestExpenses', JSON.stringify(this.expenses));
+                    localStorage.setItem('splitbill_expenses', JSON.stringify(this.expenses));
                 }
             } else {
                 await firebase.firestore().collection('expenses').doc(expenseId).update(updatedData);
@@ -664,7 +700,7 @@ class ExpenseManager {
         try {
             if (this.isGuest) {
                 this.expenses = this.expenses.filter(e => e.id !== expenseId);
-                localStorage.setItem('guestExpenses', JSON.stringify(this.expenses));
+                localStorage.setItem('splitbill_expenses', JSON.stringify(this.expenses));
             } else {
                 await firebase.firestore().collection('expenses').doc(expenseId).delete();
                 this.expenses = this.expenses.filter(e => e.id !== expenseId);

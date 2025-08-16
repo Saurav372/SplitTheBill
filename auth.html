@@ -7,18 +7,18 @@
     <title>Sign In - SplitTheBill</title>
     
     <!-- PWA -->
-    <link rel="manifest" href="/manifest.json">
+    <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#3B82F6">
-    <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" href="assets/placeholder-icon.svg">
     
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+    <link rel="icon" type="image/x-icon" href="assets/placeholder-icon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/placeholder-icon.svg">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/placeholder-icon.svg">
     
     <!-- Styles -->
-    <link rel="stylesheet" href="/css/main.css">
-    <link rel="stylesheet" href="/css/auth.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/auth.css">
     
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -26,48 +26,52 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 </head>
 <body class="auth-body">
-    <!-- Navigation -->
-    <nav class="auth-nav">
-        <div class="nav-container">
-            <a href="/" class="nav-logo">
-                <img src="/assets/images/logo.svg" alt="SplitTheBill Logo" class="logo-img">
-                <span class="logo-text">SplitTheBill</span>
-            </a>
-            <a href="/" class="nav-back">← Back to Home</a>
-        </div>
+    <!-- Top Back Button (glassmorphism) -->
+    <nav class="auth-nav" aria-label="Back navigation">
+        <a class="nav-back" href="index.html">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+            <span>Back</span>
+        </a>
     </nav>
-    
+
     <!-- Main Content -->
     <main class="auth-main">
         <div class="auth-container">
-            <!-- Guest Mode Banner -->
-            <div id="guest-banner" class="guest-banner">
-                <div class="banner-content">
-                    <h2 class="banner-title">🚀 Try Guest Mode</h2>
-                    <p class="banner-description">
-                        Start splitting bills immediately without creating an account. 
-                        Your data stays on this device.
-                    </p>
-                    <button id="guest-mode-btn" class="btn btn-primary btn-large">
-                        Continue as Guest
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Auth Forms Container -->
-            <div class="auth-forms">
+            <!-- Auth Content -->
+            <div class="auth-content">
                 <!-- Sign In Form -->
-                <div id="signin-form" class="auth-form active">
+                <div id="signin-section" class="auth-section active">
                     <div class="form-header">
-                        <h1 class="form-title">Welcome Back</h1>
-                        <p class="form-description">
-                            Sign in to sync your data across devices and access advanced features.
-                        </p>
+                        <h1 class="form-title">Welcome back</h1>
+                        <p class="form-description">Please enter your details to sign in</p>
                     </div>
                     
-                    <form id="signin-form-element" class="form">
+                    <!-- Social Buttons -->
+                    <div class="social-buttons">
+                        <button type="button" id="google-signin-btn" class="btn-social" aria-label="Continue with Google">
+                            <img src="assets/icons/google.svg" alt="Google" class="social-btn-icon">
+                        </button>
+                        <button type="button" id="apple-signin-btn" class="btn-social" aria-label="Continue with Apple">
+                            <img src="assets/icons/apple.svg" alt="Apple" class="social-btn-icon">
+                        </button>
+                        <button type="button" id="facebook-signin-btn" class="btn-social" aria-label="Continue with Facebook">
+                            <svg class="social-btn-icon" viewBox="0 0 24 24" fill="#1877F2" aria-hidden="true">
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <!-- Divider -->
+                    <div class="form-divider">
+                        <span class="divider-text">or</span>
+                    </div>
+                    
+                    <!-- Form -->
+                    <form id="signin-form" class="form">
                         <div class="form-group">
-                            <label for="signin-email" class="form-label">Email</label>
+                            <label for="signin-email" class="form-label">Email address</label>
                             <input 
                                 type="email" 
                                 id="signin-email" 
@@ -87,12 +91,17 @@
                                     id="signin-password" 
                                     name="password" 
                                     class="form-input" 
-                                    placeholder="Enter your password"
+                                    placeholder="••••••••"
                                     required
                                     autocomplete="current-password"
                                 >
                                 <button type="button" class="password-toggle" aria-label="Toggle password visibility">
-                                    <span class="password-toggle-icon">👁️</span>
+                                    <svg class="password-toggle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/>
+                                        <path d="m2 2 20 20"/>
+                                        <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/>
+                                        <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/>
+                                    </svg>
                                 </button>
                             </div>
                         </div>
@@ -100,51 +109,59 @@
                         <div class="form-options">
                             <label class="checkbox-wrapper">
                                 <input type="checkbox" id="remember-me" name="remember">
-                                <span class="checkbox-custom"></span>
-                                <span class="checkbox-label">Remember me</span>
+                                <span class="checkbox-label">Remember for 30 days</span>
                             </label>
-                            <a href="#" id="forgot-password-link" class="forgot-link">Forgot password?</a>
+                            <a href="#" id="forgot-password-link" class="forgot-link auth-nav-link" data-target="forgot-password">Forgot password?</a>
                         </div>
                         
-                        <button type="submit" class="btn btn-primary btn-large btn-full" id="signin-btn">
-                            <span class="btn-text">Sign In</span>
+                        <button type="submit" class="btn-primary" id="signin-btn">
+                            <span class="btn-text">Sign in</span>
                             <span class="btn-loading" style="display: none;">Signing in...</span>
                         </button>
-                        
-                        <div class="form-divider">
-                            <span class="divider-text">or continue with</span>
-                        </div>
-                        
-                        <div class="social-buttons">
-                            <button type="button" id="google-signin-btn" class="btn btn-social btn-google">
-                                <img src="/assets/icons/google.svg" alt="Google" class="social-icon">
-                                <span>Continue with Google</span>
-                            </button>
-                            <button type="button" id="apple-signin-btn" class="btn btn-social btn-apple">
-                                <img src="/assets/icons/apple.svg" alt="Apple" class="social-icon">
-                                <span>Continue with Apple</span>
-                            </button>
-                        </div>
                     </form>
+
+                    <!-- Guest Mode CTA -->
+                    <div class="guest-cta">
+                        <button type="button" id="guest-mode-btn" class="btn-guest">Continue as Guest</button>
+                    </div>
                     
                     <div class="form-footer">
                         <p class="form-switch">
                             Don't have an account? 
-                            <a href="#" id="show-signup" class="switch-link">Sign up</a>
+                            <a href="#" id="show-signup" class="switch-link auth-nav-link" data-target="signup">Create account</a>
                         </p>
                     </div>
                 </div>
                 
                 <!-- Sign Up Form -->
-                <div id="signup-form" class="auth-form">
+                <div id="signup-section" class="auth-section">
                     <div class="form-header">
-                        <h1 class="form-title">Create Account</h1>
-                        <p class="form-description">
-                            Join thousands of users who trust SplitTheBill for expense sharing.
-                        </p>
+                        <h1 class="form-title">Create account</h1>
+                        <p class="form-description">Please enter your details to create account</p>
                     </div>
                     
-                    <form id="signup-form-element" class="form">
+                    <!-- Social Buttons -->
+                    <div class="social-buttons">
+                        <button type="button" id="google-signup-btn" class="btn-social" aria-label="Sign up with Google">
+                            <img src="assets/icons/google.svg" alt="Google" class="social-btn-icon">
+                        </button>
+                        <button type="button" id="apple-signup-btn" class="btn-social" aria-label="Sign up with Apple">
+                            <img src="assets/icons/apple.svg" alt="Apple" class="social-btn-icon">
+                        </button>
+                        <button type="button" id="facebook-signup-btn" class="btn-social" aria-label="Sign up with Facebook">
+                            <svg class="social-btn-icon" viewBox="0 0 24 24" fill="#1877F2" aria-hidden="true">
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <!-- Divider -->
+                    <div class="form-divider">
+                        <span class="divider-text">or</span>
+                    </div>
+                    
+                    <!-- Form -->
+                    <form id="signup-form" class="form">
                         <div class="form-group">
                             <label for="signup-name" class="form-label">Full Name</label>
                             <input 
@@ -159,7 +176,7 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="signup-email" class="form-label">Email</label>
+                            <label for="signup-email" class="form-label">Email address</label>
                             <input 
                                 type="email" 
                                 id="signup-email" 
@@ -179,40 +196,25 @@
                                     id="signup-password" 
                                     name="password" 
                                     class="form-input" 
-                                    placeholder="Create a password"
+                                    placeholder="••••••••"
                                     required
                                     autocomplete="new-password"
                                     minlength="6"
                                 >
                                 <button type="button" class="password-toggle" aria-label="Toggle password visibility">
-                                    <span class="password-toggle-icon">👁️</span>
+                                    <svg class="password-toggle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/>
+                                        <path d="m2 2 20 20"/>
+                                        <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/>
+                                        <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/>
+                                    </svg>
                                 </button>
                             </div>
-                            <div class="password-strength">
-                                <div class="strength-bar">
-                                    <div class="strength-fill"></div>
-                                </div>
-                                <span class="strength-text">Password strength</span>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="signup-confirm-password" class="form-label">Confirm Password</label>
-                            <input 
-                                type="password" 
-                                id="signup-confirm-password" 
-                                name="confirmPassword" 
-                                class="form-input" 
-                                placeholder="Confirm your password"
-                                required
-                                autocomplete="new-password"
-                            >
                         </div>
                         
                         <div class="form-options">
                             <label class="checkbox-wrapper">
                                 <input type="checkbox" id="terms-agreement" name="terms" required>
-                                <span class="checkbox-custom"></span>
                                 <span class="checkbox-label">
                                     I agree to the <a href="/terms.html" target="_blank">Terms of Service</a> 
                                     and <a href="/privacy.html" target="_blank">Privacy Policy</a>
@@ -220,37 +222,59 @@
                             </label>
                         </div>
                         
-                        <button type="submit" class="btn btn-primary btn-large btn-full" id="signup-btn">
+                        <button type="submit" class="btn-primary" id="signup-btn">
                             <span class="btn-text">Create Account</span>
                             <span class="btn-loading" style="display: none;">Creating account...</span>
                         </button>
-                        
-                        <div class="form-divider">
-                            <span class="divider-text">or continue with</span>
-                        </div>
-                        
-                        <div class="social-buttons">
-                            <button type="button" id="google-signup-btn" class="btn btn-social btn-google">
-                                <img src="/assets/icons/google.svg" alt="Google" class="social-icon">
-                                <span>Continue with Google</span>
-                            </button>
-                            <button type="button" id="apple-signup-btn" class="btn btn-social btn-apple">
-                                <img src="/assets/icons/apple.svg" alt="Apple" class="social-icon">
-                                <span>Continue with Apple</span>
-                            </button>
-                        </div>
                     </form>
                     
                     <div class="form-footer">
                         <p class="form-switch">
                             Already have an account? 
-                            <a href="#" id="show-signin" class="switch-link">Sign in</a>
+                            <a href="#" id="show-signin" class="switch-link auth-nav-link" data-target="signin">Sign in</a>
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Guest Entry (Guest Mode) -->
+                <div id="guest-entry-section" class="auth-section">
+                    <div class="form-header">
+                        <h1 class="form-title">Continue as Guest</h1>
+                        <p class="form-description">Enter a display name to start a temporary session.</p>
+                    </div>
+                    
+                    <form id="guest-entry-form" class="form">
+                        <div class="form-group">
+                            <label for="guest-display-name" class="form-label">Display name</label>
+                            <input 
+                                type="text" 
+                                id="guest-display-name" 
+                                name="displayName" 
+                                class="form-input" 
+                                placeholder="e.g., Alex" 
+                                required 
+                                autocomplete="nickname"
+                            >
+                        </div>
+                        
+                        <p class="helper-text">Guest sessions are stored locally and clear when you close the browser.</p>
+                        
+                        <button type="submit" class="btn-primary" id="guest-entry-btn">
+                            <span class="btn-text">Enter Dashboard</span>
+                            <span class="btn-loading" style="display: none;">Preparing...</span>
+                        </button>
+                    </form>
+                    
+                    <div class="form-footer">
+                        <p class="form-switch">
+                            Want to sign in instead?
+                            <a href="#" class="switch-link auth-nav-link" data-target="signin">Go to Sign in</a>
                         </p>
                     </div>
                 </div>
                 
                 <!-- Forgot Password Form -->
-                <div id="forgot-password-form" class="auth-form">
+                <div id="forgot-password-section" class="auth-section">
                     <div class="form-header">
                         <h1 class="form-title">Reset Password</h1>
                         <p class="form-description">
@@ -258,9 +282,9 @@
                         </p>
                     </div>
                     
-                    <form id="forgot-password-form-element" class="form">
+                    <form id="forgot-password-form" class="form">
                         <div class="form-group">
-                            <label for="forgot-email" class="form-label">Email</label>
+                            <label for="forgot-email" class="form-label">Email address</label>
                             <input 
                                 type="email" 
                                 id="forgot-email" 
@@ -272,7 +296,7 @@
                             >
                         </div>
                         
-                        <button type="submit" class="btn btn-primary btn-large btn-full" id="forgot-btn">
+                        <button type="submit" class="btn-primary" id="forgot-password-btn">
                             <span class="btn-text">Send Reset Link</span>
                             <span class="btn-loading" style="display: none;">Sending...</span>
                         </button>
@@ -281,7 +305,7 @@
                     <div class="form-footer">
                         <p class="form-switch">
                             Remember your password? 
-                            <a href="#" id="back-to-signin" class="switch-link">Sign in</a>
+                            <a href="#" id="back-to-signin" class="switch-link auth-nav-link" data-target="signin">Sign in</a>
                         </p>
                     </div>
                 </div>
@@ -293,15 +317,15 @@
     <div id="toast-container" class="toast-container"></div>
     
     <!-- Scripts -->
-    <script src="/js/firebase-config.js"></script>
-    <script src="/js/utils.js"></script>
-    <script src="/js/auth.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
     
     <script>
         // Service Worker Registration
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
+                navigator.serviceWorker.register('sw.js')
                     .then((registration) => {
                         console.log('SW registered: ', registration);
                     })

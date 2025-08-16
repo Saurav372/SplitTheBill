@@ -29,6 +29,15 @@ try {
     // Initialize Firestore Database
     db = firebase.firestore();
     
+    // Configure Firestore settings BEFORE enabling persistence or any other calls
+    try {
+        db.settings({
+            cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED
+        });
+    } catch (e) {
+        console.warn('Firestore settings error:', e);
+    }
+    
     // Enable offline persistence for Firestore
     db.enablePersistence({
         synchronizeTabs: true
@@ -38,11 +47,6 @@ try {
         } else if (err.code === 'unimplemented') {
             console.warn('Firebase persistence not supported by browser');
         }
-    });
-    
-    // Configure Firestore settings
-    db.settings({
-        cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED
     });
     
     isFirebaseInitialized = true;
@@ -110,7 +114,7 @@ function updateAuthUI(user) {
         // Authenticated user
         const displayName = user.displayName || user.email?.split('@')[0] || 'User';
         const email = user.email || 'No email';
-        const photoURL = user.photoURL || '/assets/default-avatar.svg';
+        const photoURL = user.photoURL || '/assets/placeholder.svg';
         
         if (userNameEl) userNameEl.textContent = displayName;
         if (userModeEl) userModeEl.textContent = 'Signed In';
@@ -124,10 +128,16 @@ function updateAuthUI(user) {
         // Guest user or not authenticated
         if (userNameEl) userNameEl.textContent = 'Guest User';
         if (userModeEl) userModeEl.textContent = 'Guest Mode';
-        if (userAvatarEl) userAvatarEl.src = '/assets/default-avatar.svg';
+        if (userAvatarEl) {
+  userAvatarEl.src = '/assets/placeholder.svg';
+  userAvatarEl.setAttribute('data-placeholder', 'user-avatar');
+}
         if (dropdownNameEl) dropdownNameEl.textContent = 'Guest User';
         if (dropdownEmailEl) dropdownEmailEl.textContent = 'guest@splitthebill.app';
-        if (dropdownAvatarEl) dropdownAvatarEl.src = '/assets/default-avatar.svg';
+        if (dropdownAvatarEl) {
+  dropdownAvatarEl.src = '/assets/placeholder.svg';
+  dropdownAvatarEl.setAttribute('data-placeholder', 'user-avatar');
+}
         if (guestWarningEl) guestWarningEl.style.display = 'block';
     }
 }

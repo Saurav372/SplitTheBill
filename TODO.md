@@ -224,45 +224,117 @@ This TODO.md file serves as the comprehensive project context and task tracker f
 ### Phase 4: UI/UX & Polish (Medium Priority)
 
 #### 12. UI Assets & Image Requirements
-**12.1 App Icons & Branding**
-- [ ] **PLACEHOLDER:** App logo (SVG format, scalable for different sizes)
-- [ ] **PLACEHOLDER:** Favicon (16x16, 32x32, 48x48 PNG)
-- [ ] **PLACEHOLDER:** PWA icons (192x192, 512x512 PNG)
-- [ ] **PLACEHOLDER:** Apple touch icon (180x180 PNG)
-- [ ] **PLACEHOLDER:** App splash screen images for different devices
 
-**12.2 Homepage Images**
-- [ ] **PLACEHOLDER:** Hero section background image or illustration
-- [ ] **PLACEHOLDER:** Feature showcase icons/illustrations (expense splitting, group management, analytics)
-- [ ] **PLACEHOLDER:** Testimonial user avatars (if using real testimonials)
-- [ ] **PLACEHOLDER:** App mockup/screenshot for homepage demo
-- [ ] **PLACEHOLDER:** Social media sharing image (Open Graph)
+**🎨 Image Asset Specifications**
 
-**12.3 Dashboard & UI Icons**
-- [ ] **PLACEHOLDER:** Tab navigation icons (Groups, Members, Expenses, Analytics, Settings)
-- [ ] **PLACEHOLDER:** Action button icons (add, edit, delete, share, export)
-- [ ] **PLACEHOLDER:** Currency symbols/flags for currency selection
-- [ ] **PLACEHOLDER:** Category icons for expense types (food, transport, entertainment, etc.)
-- [ ] **PLACEHOLDER:** Empty state illustrations (no groups, no expenses, no members)
+Below are all required images with exact dimensions, formats, and file paths. Each placeholder in the codebase is mapped to a specific image requirement.
 
-**12.4 Authentication & Onboarding**
-- [ ] **PLACEHOLDER:** Login/signup page background or illustration
-- [ ] **PLACEHOLDER:** Social login provider icons (Google, Apple)
-- [ ] **PLACEHOLDER:** Onboarding tutorial illustrations/screenshots
-- [ ] **PLACEHOLDER:** Success/error state icons
+**12.1 Core Branding & Logos**
+- [ ] **logo.svg** - Main app logo - 32x32px (vector, scalable) - `assets/images/logo.svg`
+  - Used in navigation bars, footer, authentication pages
+  - SVG format for scalability across all screen sizes
+  - Should work well in both light and dark themes
 
-**12.5 Miscellaneous UI Elements**
-- [ ] **PLACEHOLDER:** Loading spinner or animation frames
-- [ ] **PLACEHOLDER:** Dark mode toggle icon (sun/moon)
-- [ ] **PLACEHOLDER:** Language selection flags
-- [ ] **PLACEHOLDER:** Receipt upload placeholder image
-- [ ] **PLACEHOLDER:** 404/error page illustration
+**12.2 User Interface Icons**
+- [ ] **user-avatar.svg** - Default user avatar - 32x32px - `assets/default-avatar.svg`
+  - Circular profile image placeholder for users without photos
+  - Simple, friendly design representing a person
 
-**📝 Note for Developer:** All placeholders marked above require actual images to be provided. Please provide these images in the following formats:
-- **Icons:** SVG preferred for scalability, PNG as fallback
-- **Illustrations:** SVG or high-quality PNG
-- **Photos:** WebP format preferred, JPEG as fallback
-- **App Icons:** PNG in multiple sizes as specified
+**12.3 Social Authentication Icons**
+- [ ] **social-google.svg** - Google sign-in icon - 20x20px - `assets/icons/google.svg`
+  - Google's official brand colors and design guidelines
+  - Used in authentication buttons
+- [ ] **social-apple.svg** - Apple sign-in icon - 20x20px - `assets/icons/apple.svg`
+  - Apple's official design specifications
+  - Used in authentication buttons
+
+**12.4 Homepage Hero & Feature Images**
+- [ ] **hero-mockup.svg** - Hero section mockup - Responsive (max-width: 100%) - `assets/hero-mockup.png`
+  - App screenshot or illustration showing main dashboard
+  - Should demonstrate key features and clean UI design
+  - Mobile-friendly design preferred
+
+**12.5 Feature Section Icons**
+- [ ] **feature-no-signup.svg** - No signup required icon - 32x32px - `assets/icons/`
+  - Represents easy access without registration barriers
+- [ ] **feature-mobile-first.svg** - Mobile-first design icon - 32x32px - `assets/icons/`
+  - Smartphone or responsive design illustration
+- [ ] **feature-multi-currency.svg** - Multi-currency support icon - 32x32px - `assets/icons/`
+  - Currency symbols or globe with money illustration
+- [ ] **feature-offline.svg** - Offline functionality icon - 32x32px - `assets/icons/`
+  - Disconnected/offline state indicator
+- [ ] **feature-split-methods.svg** - Split methods icon - 32x32px - `assets/icons/`
+  - Pie chart or division illustration showing expense splitting
+- [ ] **feature-pdf-export.svg** - PDF export icon - 32x32px - `assets/icons/`
+  - Document or export illustration
+
+**12.6 How It Works Section Images**
+- [ ] **step-1.svg** - Create group illustration - Max 300x200px - `assets/images/step-1.svg`
+  - Visual showing group creation process
+  - Clean, modern illustration style
+- [ ] **step-2.svg** - Add expenses illustration - Max 300x200px - `assets/images/step-2.svg`
+  - Visual showing expense entry interface
+  - Should show form inputs and calculation
+- [ ] **step-3.svg** - Settle up illustration - Max 300x200px - `assets/images/step-3.svg`
+  - Visual showing balance settlement and payments
+  - Include payment/transfer visualization
+
+**12.7 PWA Icons & Manifest Assets**
+- [ ] **icon-144x144.svg** - PWA icon - 144x144px - `assets/icons/icon-144x144.svg`
+- [ ] **icon-192x192.svg** - PWA icon - 192x192px - `assets/icons/icon-192x192.svg`
+- [ ] **icon-384x384.svg** - PWA icon - 384x384px - `assets/icons/icon-384x384.svg`
+- [ ] **icon-512x512.svg** - PWA icon - 512x512px - `assets/icons/icon-512x512.svg`
+  - All should be the same design in different sizes
+  - Maskable design that works well when cropped to circles
+  - Simple, recognizable symbol for the app
+
+**12.8 PWA Screenshots for App Stores**
+- [ ] **mobile-dashboard.svg** - Mobile dashboard view - 390x844px - `assets/screenshots/`
+  - Screenshot showing dashboard on mobile device
+- [ ] **mobile-expense.svg** - Mobile expense splitting - 390x844px - `assets/screenshots/`
+  - Screenshot showing expense entry and splitting
+- [ ] **desktop-dashboard.svg** - Desktop dashboard view - 1280x720px - `assets/screenshots/`
+  - Screenshot showing dashboard on desktop
+- [ ] **desktop-groups.svg** - Desktop group management - 1280x720px - `assets/screenshots/`
+  - Screenshot showing group management interface
+
+**12.9 Favicon Package**
+- [ ] **favicon.ico** - Browser favicon - 16x16, 32x32, 48x48px - `assets/favicon.ico`
+- [ ] **favicon-16x16.png** - Small favicon - 16x16px - `assets/favicon-16x16.png`
+- [ ] **favicon-32x32.png** - Standard favicon - 32x32px - `assets/favicon-32x32.png`
+- [ ] **apple-touch-icon.png** - iOS home screen icon - 180x180px - `assets/apple-touch-icon.png`
+- [ ] **android-chrome-192x192.png** - Android chrome icon - 192x192px - `assets/android-chrome-192x192.png`
+- [ ] **android-chrome-512x512.png** - Android chrome icon - 512x512px - `assets/android-chrome-512x512.png`
+
+**12.10 SEO & Social Media**
+- [ ] **og-image.png** - Open Graph image - 1200x630px - `assets/og-image.png`
+  - Social media sharing image (Facebook, Twitter, LinkedIn)
+  - Should include app name and brief description
+  - High-quality, eye-catching design
+
+**📋 File Format Guidelines:**
+- **Icons:** SVG preferred for scalability, PNG for specific sizes
+- **Illustrations:** SVG for simple graphics, PNG for complex designs
+- **Screenshots:** PNG for pixel-perfect UI representations
+- **Social Images:** PNG or JPEG for photos, PNG for graphics
+- **Favicons:** ICO for favicon.ico, PNG for all others
+
+**🎨 Design Requirements:**
+- **Color Scheme:** Primary blue (#3B82F6), neutral grays, clean modern aesthetic
+- **Style:** Minimalist, friendly, professional
+- **Accessibility:** High contrast, clear visibility in both light and dark modes
+- **Consistency:** All icons should follow the same design language
+- **Optimization:** All images should be optimized for web (small file sizes)
+
+**📁 Current Placeholder Status:**
+All images currently use placeholder SVG files:
+- `assets/placeholder.svg` - Used for larger images and illustrations
+- `assets/placeholder-icon.svg` - Used for small icons and favicons
+
+**🔄 Implementation Priority:**
+1. **High Priority:** Logo, favicon package, social auth icons
+2. **Medium Priority:** Feature icons, step illustrations, PWA icons
+3. **Low Priority:** Screenshots, Open Graph image, additional promotional materials
 
 #### 13. User Experience Features
 - [x] Implement dark mode toggle with system preference detection

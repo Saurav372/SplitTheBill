@@ -21,26 +21,74 @@ class AuthManager {
         
         // Handle redirect result for mobile social sign-in
         this.handleRedirectResult();
+        
+        // If navigated with ?mode=guest, ensure guest entry shown immediately
+        try {
+            const params = URLUtils.getParams();
+            if (params.mode === 'guest') {
+                // Delay until DOM ready to show section if not already
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', () => this.handleGuestStart());
+                } else {
+                    this.handleGuestStart();
+                }
+            }
+        } catch (_) { /* ignore */ }
+        
+        // Add unload handler to clear guest session for PRD requirement
+        window.addEventListener('beforeunload', () => {
+            if (this.isGuest) {
+                this.clearGuestSession();
+            }
+        });
     }
 
     /**
      * Initialize Firebase auth state listener
      */
     initAuthStateListener() {
-        if (typeof firebase !== 'undefined' && firebase.auth) {
-            firebase.auth().onAuthStateChanged((user) => {
-                this.currentUser = user;
-                this.isGuest = false;
-                this.notifyAuthStateChange(user);
-                
-                if (user) {
-                    console.log('User signed in:', user.email);
-                    this.handleAuthSuccess(user);
-                } else {
-                    console.log('User signed out');
-                    this.handleAuthSignOut();
-                }
-            });
+        // Check if Firebase is available and environment is supported
+        if (typeof firebase !== 'undefined' && firebase.auth && this.isFirebaseSupported()) {
+            try {
+                firebase.auth().onAuthStateChanged((user) => {
+                    this.currentUser = user;
+                    this.isGuest = false;
+                    this.notifyAuthStateChange(user);
+                    
+                    if (user) {
+                        console.log('User signed in:', user.email);
+                        this.handleAuthSuccess(user);
+                    } else {
+                        console.log('User signed out');
+                        this.handleAuthSignOut();
+                    }
+                });
+            } catch (error) {
+                console.warn('Firebase auth state listener failed:', error);
+                // Continue in guest-only mode
+            }
+        } else {
+            console.log('Firebase not available or not supported, guest mode only');
+        }
+    }
+
+    /**
+     * Check if Firebase is supported in current environment
+     */
+    isFirebaseSupported() {
+        try {
+            const protocol = window?.location?.protocol || '';
+            const storageEnabled = (() => {
+                try {
+                    const k = '__t';
+                    window.localStorage.setItem(k, '1');
+                    window.localStorage.removeItem(k);
+                    return true;
+                } catch (_) { return false; }
+            })();
+            return (protocol === 'http:' || protocol === 'https:' || protocol === 'chrome-extension:') && storageEnabled;
+        } catch (_) {
+            return false;
         }
     }
 
@@ -65,7 +113,7 @@ class AuthManager {
         // Guest mode button
         const guestBtn = DOM.get('guest-mode-btn');
         if (guestBtn) {
-            guestBtn.addEventListener('click', () => this.handleGuestMode());
+            guestBtn.addEventListener('click', () => this.handleGuestStart());
         }
 
         // Sign in form
@@ -86,6 +134,12 @@ class AuthManager {
             forgotForm.addEventListener('submit', (e) => this.handleForgotPassword(e));
         }
 
+        // Guest entry form (name entry for guest mode)
+        const guestEntryForm = DOM.get('guest-entry-form');
+        if (guestEntryForm) {
+            guestEntryForm.addEventListener('submit', (e) => this.handleGuestEntry(e));
+        }
+
         // Social auth buttons
         const googleBtn = DOM.get('google-signin-btn');
         if (googleBtn) {
@@ -95,6 +149,17 @@ class AuthManager {
         const appleBtn = DOM.get('apple-signin-btn');
         if (appleBtn) {
             appleBtn.addEventListener('click', () => this.handleAppleSignIn());
+        }
+
+        // Social auth buttons (signup section)
+        const googleSignupBtn = DOM.get('google-signup-btn');
+        if (googleSignupBtn) {
+            googleSignupBtn.addEventListener('click', () => this.handleGoogleSignIn());
+        }
+
+        const appleSignupBtn = DOM.get('apple-signup-btn');
+        if (appleSignupBtn) {
+            appleSignupBtn.addEventListener('click', () => this.handleAppleSignIn());
         }
 
         // Navigation links
@@ -142,6 +207,8 @@ class AuthManager {
             
             // Store guest session
             Storage.set('guestSession', this.guestData);
+            // Flag app-wide guest mode so dashboard picks it up
+            localStorage.setItem('splitbill_guest_mode', 'true');
             this.isGuest = true;
             
             // Initialize guest data structure
@@ -175,6 +242,18 @@ class AuthManager {
             settlements: []
         };
         
+        // Store with consistent naming that other modules expect
+        if (!localStorage.getItem('splitbill_groups')) {
+            localStorage.setItem('splitbill_groups', JSON.stringify(guestData.groups));
+        }
+        if (!localStorage.getItem('splitbill_expenses')) {
+            localStorage.setItem('splitbill_expenses', JSON.stringify(guestData.expenses));
+        }
+        if (!localStorage.getItem('guestUser')) {
+            localStorage.setItem('guestUser', JSON.stringify(this.guestData));
+        }
+        
+        // Also use Storage utility for internal tracking
         Object.keys(guestData).forEach(key => {
             if (!Storage.get(`guest_${key}`)) {
                 Storage.set(`guest_${key}`, guestData[key]);
@@ -202,7 +281,10 @@ class AuthManager {
             this.showLoading('signin-btn');
             this.clearErrors();
             
-            // Sign in with Firebase
+            // Sign in with Firebase (only if supported)
+            if (typeof firebase === 'undefined' || !firebase.auth || !this.isFirebaseSupported()) {
+                throw new Error('Email/password sign-in is not available in this environment.');
+            }
             const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
             
             // Handle remember me
@@ -247,7 +329,10 @@ class AuthManager {
             this.showLoading('signup-btn');
             this.clearErrors();
             
-            // Create user with Firebase
+            // Create user with Firebase (only if supported)
+            if (typeof firebase === 'undefined' || !firebase.auth || !this.isFirebaseSupported()) {
+                throw new Error('Sign up is not available in this environment.');
+            }
             const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
             const user = userCredential.user;
             
@@ -293,6 +378,9 @@ class AuthManager {
             this.showLoading('forgot-password-btn');
             this.clearErrors();
             
+            if (typeof firebase === 'undefined' || !firebase.auth || !this.isFirebaseSupported()) {
+                throw new Error('Password reset not available in this environment.');
+            }
             await firebase.auth().sendPasswordResetEmail(email);
             
             this.showSuccess('Password reset email sent! Please check your inbox.');
@@ -328,6 +416,10 @@ class AuthManager {
     async handleSocialSignIn(provider) {
         try {
             this.showLoading(`${provider}-signin-btn`);
+            
+            if (typeof firebase === 'undefined' || !firebase.auth || !this.isFirebaseSupported()) {
+                throw new Error('Social sign-in is not available in this environment.');
+            }
             
             let authProvider;
             if (provider === 'google') {
@@ -437,37 +529,24 @@ class AuthManager {
      */
     async handleRedirectResult() {
         try {
+            const protocol = window?.location?.protocol || '';
+            const storageEnabled = (() => {
+                try {
+                    const k = '__t';
+                    window.localStorage.setItem(k, '1');
+                    window.localStorage.removeItem(k);
+                    return true;
+                } catch (_) { return false; }
+            })();
+            const supported = (protocol === 'http:' || protocol === 'https:' || protocol === 'chrome-extension:') && storageEnabled;
+            if (!supported) return; // Skip in unsupported environments
+            
             const result = await firebase.auth().getRedirectResult();
             if (result && result.user) {
-                const user = result.user;
-                const additionalUserInfo = result.additionalUserInfo;
-                const isNewUser = additionalUserInfo?.isNewUser || false;
-                const provider = result.credential?.signInMethod || 'unknown';
-                
-                // Create or update user document
-                await this.createUserDocument(user, {
-                    name: user.displayName || `${provider} User`,
-                    email: user.email,
-                    photoURL: user.photoURL,
-                    provider: provider,
-                    signInMethod: 'redirect',
-                    lastSignIn: new Date().toISOString(),
-                    isNewUser,
-                    profile: additionalUserInfo?.profile || {}
-                });
-                
-                const message = isNewUser 
-                    ? 'Welcome! Your account has been created.'
-                    : 'Successfully signed in!';
-                this.showSuccess(message);
-                
-                // Redirect to dashboard
-                await Timing.delay(1000);
-                window.location.href = 'dashboard.html';
+                this.handleAuthSuccess(result.user);
             }
         } catch (error) {
-            console.error('Redirect result error:', error);
-            this.showError('Failed to complete sign-in. Please try again.');
+            console.warn('Redirect result skipped or failed:', error?.message || error);
         }
     }
 
@@ -478,13 +557,17 @@ class AuthManager {
         try {
             if (this.isGuest) {
                 // Clear guest session
-                Storage.remove('guestSession');
+                this.clearGuestSession();
                 this.isGuest = false;
                 this.guestData = null;
                 this.notifyAuthStateChange(null);
             } else {
-                // Sign out from Firebase
-                await firebase.auth().signOut();
+                // Sign out from Firebase when supported
+                if (typeof firebase !== 'undefined' && firebase.auth && this.isFirebaseSupported()) {
+                    await firebase.auth().signOut();
+                }
+                // Ensure any guest data is cleared
+                this.clearGuestSession();
             }
             
             // Redirect to home page
@@ -501,6 +584,10 @@ class AuthManager {
      */
     async createUserDocument(user, additionalData = {}) {
         if (!user) return;
+        // Guard: require Firebase and Firestore support
+        if (typeof firebase === 'undefined' || !firebase.firestore || !this.isFirebaseSupported()) {
+            return;
+        }
         
         try {
             const userRef = firebase.firestore().doc(`users/${user.uid}`);
@@ -545,6 +632,23 @@ class AuthManager {
      * Check for existing guest session
      */
     checkGuestSession() {
+        // Check URL parameter first
+        const urlParams = URLUtils.getParams();
+        if (urlParams.mode === 'guest') {
+            // If a guest session already exists, proceed to dashboard; otherwise, show name entry
+            const existing = Storage.get('guestSession');
+            if (existing?.isGuest) {
+                this.isGuest = true;
+                this.guestData = existing;
+                localStorage.setItem('splitbill_guest_mode', 'true');
+                this.notifyAuthStateChange(existing);
+                window.location.href = 'dashboard.html?mode=guest';
+            } else {
+                this.handleGuestStart();
+            }
+            return;
+        }
+
         const guestSession = Storage.get('guestSession');
         if (guestSession && guestSession.isGuest) {
             this.isGuest = true;
@@ -752,6 +856,19 @@ class AuthManager {
     }
 
     /**
+     * Clear guest session data from storage
+     */
+    clearGuestSession() {
+        try {
+            Storage.remove('guestSession');
+            localStorage.removeItem('splitbill_guest_mode');
+            localStorage.removeItem('guestUser');
+            localStorage.removeItem('splitbill_groups');
+            localStorage.removeItem('splitbill_expenses');
+        } catch (_) { /* ignore */ }
+    }
+
+    /**
      * Show loading state
      */
     showLoading(buttonId) {
@@ -872,6 +989,74 @@ class AuthManager {
      */
     isGuestUser() {
         return this.isGuest;
+    }
+    /**
+     * Handle guest mode start (show name entry screen)
+     */
+    handleGuestStart() {
+        // Show the guest entry section per PRD requirement
+        this.showSection('guest-entry');
+        // Ensure URL reflects guest mode so deep links work
+        if (typeof URLUtils !== 'undefined') {
+            URLUtils.setParam('mode', 'guest', true);
+        }
+        // Focus the name input for better UX
+        setTimeout(() => {
+            const nameInput = DOM.get('guest-display-name');
+            if (nameInput) nameInput.focus();
+        }, 0);
+    }
+
+    /**
+     * Handle guest entry submission (create guest session)
+     */
+    async handleGuestEntry(event) {
+        event.preventDefault();
+        const form = event.target;
+        const displayName = (form.displayName?.value || form['guest-display-name']?.value || '').trim();
+
+        if (!Validation.isRequired(displayName)) {
+            this.showError('Please enter your name to continue as guest.');
+            return;
+        }
+
+        try {
+            this.showLoading('guest-entry-btn');
+
+            // Generate guest user data
+            const guestId = 'guest_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            this.guestData = {
+                id: guestId,
+                email: `${guestId}@guest.local`,
+                displayName,
+                isGuest: true,
+                createdAt: new Date().toISOString(),
+                preferences: {
+                    currency: 'USD',
+                    language: 'en',
+                    theme: 'light'
+                }
+            };
+
+            // Store guest session and set app-wide guest flag
+            Storage.set('guestSession', this.guestData);
+            localStorage.setItem('splitbill_guest_mode', 'true');
+            localStorage.setItem('guestUser', JSON.stringify(this.guestData));
+            this.isGuest = true;
+
+            // Initialize guest data structure
+            this.initializeGuestData();
+
+            // Notify and redirect
+            this.notifyAuthStateChange(this.guestData);
+            this.showSuccess(`Welcome ${displayName}! Redirecting to dashboard...`);
+            await Timing.delay(800);
+            window.location.href = 'dashboard.html?mode=guest';
+        } catch (error) {
+            this.handleAuthError(error, 'guest-entry');
+        } finally {
+            this.hideLoading('guest-entry-btn');
+        }
     }
 }
 
