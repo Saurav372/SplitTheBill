@@ -1319,6 +1319,26 @@ input:checked + .toggle-slider:before {
     }
 }
 
+/* Contact Section */
+.contact {
+    padding: var(--space-20) 0;
+    background-color: var(--bg-secondary);
+}
+
+.contact-content {
+    max-width: 700px;
+    margin: 0 auto;
+    background-color: var(--bg-primary);
+    padding: var(--space-10);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+}
+
+.contact-form {
+    display: grid;
+    gap: var(--space-6);
+}
+
 /* Footer */
 .footer {
     background-color: var(--neutral-900);
